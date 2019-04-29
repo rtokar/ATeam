@@ -48,7 +48,8 @@ public class QuestionResult extends Application{
 	      primaryStage.show();
 	      
 	      
-	      nextButton.setOnAction();
+	      //TODO call new questionScene from next button
+	     // nextButton.setOnAction();
 	      
 	    } catch (Exception e) {
 	      System.out.println(e.getMessage());

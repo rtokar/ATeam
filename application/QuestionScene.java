@@ -178,6 +178,11 @@ public class QuestionScene extends Application {
 			System.out.println(e.getMessage());
 		}
 	}
+	
+	//TODO
+	private void displayNextQuestion() {
+		
+	}
 
 	public static void main(String[] args) {
 		launch(args);
