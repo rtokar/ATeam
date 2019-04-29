@@ -21,7 +21,7 @@ import javafx.stage.Stage;
 
 //TODO: QuestionScene, QuizResults, MakeQuestion
 // Are you all making guis for these that I will open?
-// comment1
+
 /**
  * This is the main driver for the quiz generator.
  * @author jthalacker, ascherer
@@ -29,16 +29,16 @@ import javafx.stage.Stage;
  */
 public class Main extends Application{
   
-  QuestionBank masterQuestionBank; // bank of questions from all loaded json files
-  QuestionBank topicQuestionBank; // all questions with topic matching selected topics
-  QuestionBank quizQuestionBank; // a subset of randomized questions from selected topics, 
+  protected QuestionBank masterQuestionBank; // bank of questions from all loaded json files
+  protected QuestionBank topicQuestionBank; // all questions with topic matching selected topics
+  protected QuestionBank quizQuestionBank; // a subset of randomized questions from selected topics, 
                                  //number equal to numQuizQuestions (or num of qs in topicQuestionBank, whichever is lower)
   
-  List<String> topicList; // list of topics from masterQuestionBank
-  List<String> currentTopics; // list of chosen topics from topicList
-  int numQuizQuestions; // num entered in the TextField numQuestionsTextField
+  protected List<String> topicList; // list of topics from masterQuestionBank
+  protected List<String> currentTopics; // list of chosen topics from topicList
+  protected int numQuizQuestions; // num entered in the TextField numQuestionsTextField
   
-  Stage mainStage;
+  private Stage mainStage;
 
   public void start(Stage primaryStage) {
     try {
@@ -53,7 +53,7 @@ public class Main extends Application{
       HBox addAndClear = new HBox(5);
       
       //vBox1 UI controls
-      Button makeQuestionButton = new Button("Make Blarg Question");
+      Button makeQuestionButton = new Button("Make Question");
       Button loadQuestionsButton = new Button("Load Questions");
       Button takeTestButton = new Button("Take Test");
       Button saveAndQuitButton = new Button("Save and Quit");
@@ -179,14 +179,6 @@ public class Main extends Application{
   }
   
   /**
-   * Helper method to add an individual question to the masterQuestionBank from the json file chosen by loadQuestionsButton
-   * and loadQuestions() is called. Will repeatedly call this from loadQuestions() as long as there is a question to add.
-   */
-  private void addQuestion() {
-    System.out.println("addQuestion()");
-  }
-  
-  /**
    * Displays UI screen to save and quit (saves to json?)
    * Calls when saveAndQuitButton is pressed
    */
@@ -227,10 +219,15 @@ public class Main extends Application{
    */
   private void displayQuiz(ActionEvent event) {
     // check numQuestionsTextField entry for an int, close and reprompt if there isnt one
+    Stage quizWindow = new Stage();
+    QuestionScene quiz = new QuestionScene(quizQuestionBank, 0); // 0 is the starting question number
+    quizWindow.initModality(Modality.WINDOW_MODAL); // lock user to new window
+    quizWindow.initOwner(this.mainStage);
     try {
+      quiz.start(quizWindow);
       System.out.println("displayQuiz()");
-
-    } catch (NumberFormatException e) {
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
     }
 
   }
