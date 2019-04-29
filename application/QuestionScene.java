@@ -167,9 +167,9 @@ public class QuestionScene extends Application {
 		}
 	}
 
-	public void displayQuestionScene(ActionEvent event) {
+	public void displayNextQuestionScene(ActionEvent event) {
 		Stage quizWindow = new Stage();
-		QuestionScene quiz = new QuestionScene(currQuestions, questionNumber+1); // 0 is the starting question number
+		QuestionScene quiz = new QuestionScene(currQuestions, questionNumber+1); // 0 is start
 		quizWindow.initModality(Modality.WINDOW_MODAL); // lock user to new window
 		quizWindow.initOwner(this.mainStage);
 		try {
@@ -179,10 +179,6 @@ public class QuestionScene extends Application {
 		}
 	}
 	
-	//TODO
-	private void displayNextQuestion() {
-		
-	}
 
 	public static void main(String[] args) {
 		launch(args);
