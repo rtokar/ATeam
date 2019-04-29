@@ -1,24 +1,20 @@
 package application;
 	
+//Java regular imports
 import java.io.File;
 import java.util.ArrayList;
-
+//FX imports
 import javafx.application.Application;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
@@ -33,14 +29,11 @@ public class MakeQuestionScene extends Application {
     Button makeQuestion = new Button("Make Question"); //Make question then go back to main page
     
 	//List of answers for the question
-    List<Answer> answerListObject = new List<Answer>();	
+    private ArrayList<Answer> answerListObject = new ArrayList<Answer>(); // list of the Answer objects for question
     
     //File for image needed publically
     File image;
-    
-	//Constructor // None needed?
 	
-    
 	//Methods
 	@Override
 	public void start(Stage primaryStage) {
@@ -57,11 +50,13 @@ public class MakeQuestionScene extends Application {
 		      Label infoInvalidLabel = new Label("The required fields are not filled in");
 		      
 		      //Required Labels
-		      Label requiredLabel = new Label("This required fields are:\n-Question Topic \n-QuestionText");
+		      Label requiredLabel = new Label("This required fields are:");
+		      Label rl1 = new Label("-Question Topic");
+		      Label rl2 = new Label("-Question Text");
 		      
 		      //vBox1 UI controls and labels
 		      //Meta Data
-		      Label metaLabel = new Label("meta-data");
+		      Label metaLabel = new Label("Meta-data");
 		      TextField metaField = new TextField();
 		      metaField.setMaxWidth(200);
 		      
@@ -90,7 +85,7 @@ public class MakeQuestionScene extends Application {
 		      
 		      addAnswerButton.setOnAction(event -> {
 		    		  if (!answerField.getText().equals("") && !answerField.getText().equals("Please fill this field")) {
-		    			  answerListObject.add(new Answer(answerField.getText(), isCorrectAnswer.isSelected()));
+		    			  answerListObject.add(new Answer(isCorrectAnswer.isSelected(), answerField.getText()));
 		    			  answerList.getItems().add(answerField.getText());
 		    		  } else {
 		    			  answerField.setText("Please fill this field");
@@ -151,9 +146,10 @@ public class MakeQuestionScene extends Application {
 		      test.setOnAction(event -> {
 		    		  System.out.println(answerListObject.toString());
 			      });
+		      //End of test method
 		      
 		      //VBox and HBox creation/updates
-		      vBox1.getChildren().addAll(requiredLabel, metaLabel, metaField, questionTextLabel, questionText, answerLabel, 
+		      vBox1.getChildren().addAll(requiredLabel, rl1, rl2, metaLabel, metaField, questionTextLabel, questionText, answerLabel, 
 		    		  answerField, answerHBox, answerList);
 		      vBox2.getChildren().addAll(topicLabel, topicField, imageHBox, imageLabel, imageField,
 		    		  exitingMakeQuestion, test);
@@ -170,6 +166,12 @@ public class MakeQuestionScene extends Application {
 		}
 	}
 	
+	/*
+	 * This method is used to detect if the input entered by the user is
+	 * correct and if so to then make a question, put it in the main question bank, and 
+	 * close the make question scene
+	 * @Returns a boolean for whether this process succeeded or failed
+	 */
 	private boolean makeQuestionObject(String questionTopic, String questionText, String metaData, 
 			File image, String imageDescription) {
 		if (!questionTopic.equals("")) 
@@ -178,16 +180,17 @@ public class MakeQuestionScene extends Application {
 					if (image == null) {
 						Question newQuestion = new Question(questionTopic, questionText, answerListObject, metaData);
 						//ADD TO QUESTION BANK //TODO
-						
+						//Main.masterQuestionBank.addQuestion(newQuestion);
 						//Makes Question if image is not null
 					} else {
-						Question newQuestion = new Question(questionTopic, questionText, answerListObject, metaData,
-							image, imageDescription);
+						//Add String imageDescription to second constructor for question //TODO
+						//Question newQuestion = new Question(questionTopic, questionText, answerListObject, metaData,
+						//	image, imageDescription);
+						//Main.masterQuestionBank.addQuestion(newQuestion);
 						//ADD TO QUESTION BANK //TODO
 					}
 					return true;
 				}
-					//May need to be edited for adjustment for question class
 		return false;
 	}
 
