@@ -191,7 +191,6 @@ public class MakeQuestionScene extends Application {
 					}
 					return true;
 				}
-					//May need to be edited for adjustment for question class
 		return false;
 	}
 
