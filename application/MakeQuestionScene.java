@@ -33,7 +33,7 @@ public class MakeQuestionScene extends Application {
     Button makeQuestion = new Button("Make Question"); //Make question then go back to main page
     
 	//List of answers for the question
-    ArrayList<Answer> answerListObject = new ArrayList<Answer>();	
+    List<Answer> answerListObject = new List<Answer>();	
     
     //File for image needed publically
     File image;
@@ -138,7 +138,6 @@ public class MakeQuestionScene extends Application {
 		      makeQuestion.setOnAction(event -> {
 		    	  boolean flag = makeQuestionObject(topicField.getText(), questionText.getText(), 
 		    			  metaField.getText(), image, imageField.getText());
-		    	  //Return question object to main????
 		    	  if (flag) {
 			    	  exitMakeQuestion(primaryStage); 
 		    	  } else {
@@ -147,7 +146,7 @@ public class MakeQuestionScene extends Application {
 		    	  }
 		      });
 		      
-		      //Test Button to be removed
+		      //Test Button to be removed //TODO
 		      Button test = new Button("test");
 		      test.setOnAction(event -> {
 		    		  System.out.println(answerListObject.toString());
@@ -174,13 +173,21 @@ public class MakeQuestionScene extends Application {
 	private boolean makeQuestionObject(String questionTopic, String questionText, String metaData, 
 			File image, String imageDescription) {
 		if (!questionTopic.equals("")) 
-				if (!questionText.equals("")) 
-					if (answerListObject.size() >= 2) { //Maybe change??????
-						Question newQuestion = new Question(questionTopic, questionText, metaData, 
-								image, imageDescription,  answerListObject);
-						return true;
-						//May need to be edited for adjustment for question class
+				if (!questionText.equals("")) {
+					//Makes Question if image is null
+					if (image == null) {
+						Question newQuestion = new Question(questionTopic, questionText, answerListObject, metaData);
+						//ADD TO QUESTION BANK //TODO
+						
+						//Makes Question if image is not null
+					} else {
+						Question newQuestion = new Question(questionTopic, questionText, answerListObject, metaData,
+							image, imageDescription);
+						//ADD TO QUESTION BANK //TODO
 					}
+					return true;
+				}
+					//May need to be edited for adjustment for question class
 		return false;
 	}
 
