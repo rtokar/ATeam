@@ -22,8 +22,6 @@ import javafx.stage.Stage;
 //TODO: QuestionScene, QuizResults, MakeQuestion
 // Are you all making guis for these that I will open?
 
-// comment2
-
 /**
  * This is the main driver for the quiz generator.
  * @author jthalacker, ascherer
@@ -55,7 +53,7 @@ public class Main extends Application{
       HBox addAndClear = new HBox(5);
       
       //vBox1 UI controls
-      Button makeQuestionButton = new Button("Make Question");
+      Button makeQuestionButton = new Button("Make Blarg Question");
       Button loadQuestionsButton = new Button("Load Questions");
       Button takeTestButton = new Button("Take Test");
       Button saveAndQuitButton = new Button("Save and Quit");
