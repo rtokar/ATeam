@@ -31,9 +31,9 @@ import javafx.stage.Stage;
  */
 public class Main extends Application{
   
-//  QuestionBank masterQuestionBank; // bank of questions from all loaded json files
-//  QuestionBank topicQuestionBank; // all questions with topic matching selected topics
-//  QuestionBank quizQuestionBank; // a subset of randomized questions from selected topics, 
+  QuestionBank masterQuestionBank; // bank of questions from all loaded json files
+  QuestionBank topicQuestionBank; // all questions with topic matching selected topics
+  QuestionBank quizQuestionBank; // a subset of randomized questions from selected topics, 
                                  //number equal to numQuizQuestions (or num of qs in topicQuestionBank, whichever is lower)
   
   List<String> topicList; // list of topics from masterQuestionBank
@@ -120,7 +120,7 @@ public class Main extends Application{
    * Load questions from a chosen (with file chooser) json file when the loadQuestionsButton is pressed,
    * then adds them to master question bank
    */
-  public void loadQuestions(ActionEvent event) {
+  private void loadQuestions(ActionEvent event) {
     // get file with FileChooser
     Stage chooseStage = new Stage(); // new window for file chooser
     chooseStage.initOwner(mainStage); // set main stage as owner
@@ -131,14 +131,14 @@ public class Main extends Application{
     choose.getExtensionFilters().add(filt);
     File jsonFile = choose.showOpenDialog(chooseStage); // choose file
     if (jsonFile != null) {
-//      masterQuestionBank.addAllQuestions(jsonFile); // adds all questions from the chosen json file      
+      masterQuestionBank.addAllQuestions(jsonFile); // adds all questions from the chosen json file      
     }
 
     System.out.println("loadQuestions()");
     System.out.println("Selected File: "+jsonFile);
   }
   
-  public void getNumQuestions(ActionEvent event) {
+  private void getNumQuestions(ActionEvent event) {
     try {
       this.numQuizQuestions = Integer.parseInt(((TextField) event.getSource()).getText());
     } catch (NumberFormatException e) {
@@ -151,7 +151,7 @@ public class Main extends Application{
    * Called when the addTopicButton is pressed.
    * Adds the currently selected topic in the loadedTopicsComboBox to the currentTopics (no duplicates)
    */
-  public void addTopic(ActionEvent event) {
+  private void addTopic(ActionEvent event) {
     System.out.println("addTopic()");
   }
   
@@ -159,7 +159,7 @@ public class Main extends Application{
    * Called when the clearTopicListButton is pressed.
    * Removes the most recently added? all? topic/s from currentTopics
    */
-  public void clearTopicList(ActionEvent event) {
+  private void clearTopicList(ActionEvent event) {
     System.out.println("clearTopicList()");
   }
   
@@ -167,15 +167,24 @@ public class Main extends Application{
    * Displays the MakeQuestion screen when makeQuestionButton is pressed.
    *  (call from Jake's class? I forget if I am making this or he is)
    */
-  public void displayMakeQuestion(ActionEvent event) {
+  private void displayMakeQuestion(ActionEvent event) {
     System.out.println("displayMakeQuestion()");
+    Stage makeQuestionWindow = new Stage(); // make new window
+    makeQuestionWindow.initModality(Modality.WINDOW_MODAL); // lock user to new window
+    makeQuestionWindow.initOwner(this.mainStage);
+    MakeQuestionScene mqs = new MakeQuestionScene();
+    try {
+      mqs.start(makeQuestionWindow);
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
+    }
   }
   
   /**
    * Helper method to add an individual question to the masterQuestionBank from the json file chosen by loadQuestionsButton
    * and loadQuestions() is called. Will repeatedly call this from loadQuestions() as long as there is a question to add.
    */
-  public void addQuestion() {
+  private void addQuestion() {
     System.out.println("addQuestion()");
   }
   
@@ -183,7 +192,7 @@ public class Main extends Application{
    * Displays UI screen to save and quit (saves to json?)
    * Calls when saveAndQuitButton is pressed
    */
-  public void displaySaveExit(ActionEvent event) {
+  private void displaySaveExit(ActionEvent event) {
     System.out.println("displaySaveExit()");
     Stage saveExitWindow = new Stage(); // make new window
     saveExitWindow.initModality(Modality.WINDOW_MODAL); // lock user to new window
@@ -200,7 +209,7 @@ public class Main extends Application{
    * Displays UI screen to confirm that the user want to quit without saving
    * Calls when dontSaveAndQuitButton is pressed
    */
-  public void displayNoSaveExit(ActionEvent event) {
+  private void displayNoSaveExit(ActionEvent event) {
     System.out.println("displayNoSaveExit()"); // debug message
     Stage noSaveExitWindow = new Stage(); // make new window
     noSaveExitWindow.initModality(Modality.WINDOW_MODAL); // lock user to new window
@@ -218,7 +227,7 @@ public class Main extends Application{
    * Calls when takeTestButton is pressed
    * Displays quiz screen, maybe called from another class?
    */
-  public void displayQuiz(ActionEvent event) {
+  private void displayQuiz(ActionEvent event) {
     // check numQuestionsTextField entry for an int, close and reprompt if there isnt one
     try {
       System.out.println("displayQuiz()");
@@ -232,7 +241,7 @@ public class Main extends Application{
    * Calls after quiz and series of quiz questions end (from pressing takeTestButton)
    * Displays results of the quiz (from quizResults class)
    */
-  public void displayQuizResult() {
+  private void displayQuizResult() {
     System.out.println("displayQuizResult()");
   }
 
