@@ -1,9 +1,11 @@
 package application;
 
 import javafx.stage.Stage;
-import team.BorderPane;
-import team.Label;
-import team.Scene;
+import javafx.scene.Scene;
+import javafx.application.Application;
+import javafx.scene.control.Label;
+import javafx.scene.layout.BorderPane;
+import javafx.stage.Modality;
 
 /**
  * Created when the user takes a quiz, keeps track of correct 
@@ -37,8 +39,8 @@ public class QuizResult {
 		return numCorrect/numAnswered*100;	
 	}
 	
-	@Override
-	public void start(Stage primesStage) throws Exception {
+	
+	public void start(Stage primaryStage) throws Exception {
 		try {
 			BorderPane root = new BorderPane();
 			Label label1 = new Label("You answered " + numCorrect + " question(s) correctly.");
@@ -48,9 +50,9 @@ public class QuizResult {
 			root.setCenter(label2);
 			root.setCenter(label3);
 			Scene scene = new Scene(root, 400, 300);
-			primeStage.setScene(scene);
-			primeStage.setTitle("Quiz Results");
-			primeStage.show();
+			primaryStage.setScene(scene);
+			primaryStage.setTitle("Quiz Results");
+			primaryStage.show();
 		} catch(Exception e) {
 			System.out.println(e.getMessage());
 		}
