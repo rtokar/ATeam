@@ -2,10 +2,10 @@ package application;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 import org.json.simple.parser.ParseException;
-//import java.io.FileReader;
 import java.io.IOException;
 
 import org.json.simple.JSONArray; 
@@ -14,13 +14,12 @@ import org.json.simple.parser.*;
 
 public class QuestionBank {
 	List<Question> questions = new ArrayList<Question>();
-	int numQuizQuestions;
+	List<String> fileTracker = new ArrayList<String>();
+	private boolean debug = true;
 	public QuestionBank() {
-		numQuizQuestions = 0;
 	}
 	public QuestionBank(File jsonFilePath) throws FileNotFoundException, IOException, ParseException {
 		List<Question> questions = readJson(jsonFilePath);
-		numQuizQuestions = questions.size();
 	}
 	protected QuestionBank filterQuestions(String indicatedTopic) {
 		List<Question> topicQuestionList = new ArrayList<Question>();
@@ -40,9 +39,18 @@ public class QuestionBank {
 	}
 	
 	protected void addAllQuestions(File jsonFile) throws FileNotFoundException, IOException, ParseException {
-		List<Question> questions = readJson(jsonFile);
-		for(Question q: questions) {
-			this.addQuestion(q);
+		if(!fileTracker.contains(jsonFile.getAbsolutePath())) {
+			List<Question> questions = readJson(jsonFile);
+			for(Question q: questions) {
+				this.addQuestion(q);
+			}
+			fileTracker.add(jsonFile.getAbsolutePath());
+		}
+		if(debug) {
+			System.out.println("Debug Mode");
+			System.out.println("==========================");
+			System.out.println("current number count is: " + this.questions.size());
+			System.out.println("==========================");
 		}
 	}
 	
@@ -51,10 +59,8 @@ public class QuestionBank {
 		
 		//init 
 		List<Question> questions = new ArrayList<Question>();
-		
 		// parsing json file 
-        //Object obj = new JSONParser().parse(new FileReader(jsonFile)); 
-        Object obj = new JSONParser().parse(jsonFile.getAbsolutePath()); 
+        Object obj = new JSONParser().parse(new FileReader(jsonFile)); 
         
         // typecasting obj to JSONObject 
         JSONObject jo = (JSONObject) obj; 
