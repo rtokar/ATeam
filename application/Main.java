@@ -327,7 +327,7 @@ public class Main extends Application{
       alert.setContentText("Invalid Number of Quiz Questions!\n\nPlease double check the \"number of questions\" text field in the upper right. Type in a positive integer and press the \"Enter\" key when you are done.");
       alert.showAndWait();
       
-    } else if (quizQuestionBank == null || !(quizQuestionBank.questions.size() > 0)) { // check that quizQuestionBank exists has at least one question in it, throw popup error 
+    } else if (topicQuestionBank == null || !(topicQuestionBank.questions.size() > 0)) { // check that quizQuestionBank exists has at least one question in it, throw popup error //TODO change topicQuestionBank back to quizQuestionBank when clarence makes the random selection method
       // if no questions are loaded, tell the user such
       Alert alert = new Alert(AlertType.ERROR);
       alert.setTitle("No Questions Loaded");
