@@ -292,7 +292,7 @@ public class Main extends Application{
     // pull up file chooser to select save .json file, cancel will cancel the quitting process
     Stage chooseStage = new Stage(); // new window for file chooser
     chooseStage.initOwner(mainStage); // set main stage as owner
-    chooseStage.initModality(Modality.WINDOW_MODAL); // lock focus to file chooser
+    chooseStage.initModality(Modality.WINDOW_MODAL); // lock focus to file chooser 
     FileChooser choose = new FileChooser();
     choose.setTitle("Choose a .json file to load questions");
     FileChooser.ExtensionFilter filt = new FileChooser.ExtensionFilter(".json", "*.json"); // only allow .json files
