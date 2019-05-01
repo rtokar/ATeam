@@ -62,7 +62,8 @@ public class Main extends Application{
   protected static Boolean closeFlag = false; // quit windows can set this flag to true to close this main window after they close
   
   protected static Main mainInstance; // this is a weird Inception-style static field that hold the only instance of Main that will ever be created
-                                                                                                
+                          
+  protected static Stage firstQuestion; // first question scene window, for easy murder
   
   
 
@@ -139,6 +140,7 @@ public class Main extends Application{
       clearTopicListButton.setOnAction(this::clearTopicList);
       numQuestionsTextField.setOnAction(this::getNumQuestions);
       loadedTopicsComboBox.setOnAction((event) -> this.selectedTopic = ((ComboBoxBase<String>) event.getSource()).getValue()); // sets the selected topic when a topic is selected
+      // use lambda expression instead, copy over the stuff
       //mainStage.setOnCloseRequest(this::displayNoSaveExit);  // attempt to make NoSaveAndQuit happen when pressing red [x] in corner
       
       
@@ -178,10 +180,8 @@ public class Main extends Application{
         System.out.println(e.getMessage());
       }
       this.updateTopicList();
-//      this.topicList.add("blarg"); this.topicList.add("blarg2");
       this.loadedTopicsComboBox.setItems(FXCollections.observableArrayList(this.topicList)); // update topic list after loading new questions from file
       this.numTotalQuestions = masterQuestionBank.questions.size();
-//      this.numTotalQuestions = 23;
       this.numOfTopicQuestionsLabel.setText("("+this.numTopicQuestions+" topic questions) / ("+this.numTotalQuestions+" total questions)");
     }
 
@@ -225,9 +225,9 @@ public class Main extends Application{
     System.out.println("currentTopics: "+this.currentTopics);
     this.chosenTopicsListView.setItems(FXCollections.observableArrayList(this.currentTopics)); // update visible list with added topic
     this.topicQuestionBank = masterQuestionBank.filterQuestions(this.currentTopics); // create the topicQuestionBank as a filtered masterQuestionBank
-//    this.topicQuestionBank = masterQuestionBank.filterQuestions(this.currentTopics.get(0)); // comment this out when above line is uncommented
+
     this.numTopicQuestions = this.topicQuestionBank.questions.size(); 
-//    this.numTopicQuestions = 5;
+
     this.numOfTopicQuestionsLabel.setText("("+this.numTopicQuestions+" topic questions) / ("+this.numTotalQuestions+" total questions)");
   }
   
@@ -241,14 +241,12 @@ public class Main extends Application{
     this.topicQuestionBank = null;
     this.numTopicQuestions = 0;
     this.numOfTopicQuestionsLabel.setText("("+this.numTopicQuestions+" topic questions) / ("+this.numTotalQuestions+" total questions)");
-    System.out.println("clearTopicList()");
   }
   
   /**
    * Displays the MakeQuestion screen when makeQuestionButton is pressed.
    */
   private void displayMakeQuestion(ActionEvent event) {
-    System.out.println("displayMakeQuestion()");
     Stage makeQuestionWindow = new Stage(); // make new window
     makeQuestionWindow.initModality(Modality.WINDOW_MODAL); // lock user to new window
     makeQuestionWindow.initOwner(mainStage);
@@ -266,16 +264,6 @@ public class Main extends Application{
    * Calls when saveAndQuitButton is pressed
    */
   private void displaySaveExit(ActionEvent event) {
-    System.out.println("displaySaveExit()");
-//    Stage saveExitWindow = new Stage(); // make new window
-//    saveExitWindow.initModality(Modality.WINDOW_MODAL); // lock user to new window
-//    saveExitWindow.initOwner(mainStage);
-//    SaveAndQuit save = new SaveAndQuit();
-//    try {
-//      save.start(saveExitWindow); // open new window
-//    } catch (Exception e) {
-//      System.out.println(e.getMessage());
-//    }
     
     // pull up file chooser to select save .json file, cancel will cancel the quitting process
     Stage chooseStage = new Stage(); // new window for file chooser
@@ -344,20 +332,13 @@ public class Main extends Application{
       int numQs = Math.min(this.topicQuestionBank.questions.size(), this.numQuizQuestions); // gets the smaller of user-entered number and available quiz questions in topicQuestionBank
       this.quizQuestionBank = this.topicQuestionBank.getQuizQuestionBank(numQs);
       Stage quizWindow = new Stage();
+      firstQuestion = quizWindow;
       QuestionScene quiz = new QuestionScene(this.topicQuestionBank, 0, new QuizResult()); // 0 is the starting question number
       quizWindow.initModality(Modality.WINDOW_MODAL); // lock user to new window
       quizWindow.initOwner(mainStage);
-      
-      //jake debug help
-      System.out.println("---------------");
-      for (int i = 0; i < quizQuestionBank.questions.get(0).getAnswersList().size(); i++) {
-        System.out.println(quizQuestionBank.questions.get(0).getAnswersList().get(i).getAnswerText());
-      }
-      System.out.println("---------------");
-      
+
       try {
         quiz.start(quizWindow);
-        System.out.println("displayQuiz()");
       } catch (Exception e) {
         System.out.println(e.getMessage());
       }
@@ -370,16 +351,11 @@ public class Main extends Application{
    * Updates the topicList variable, reflecting all of the topics in the masterQuestionBank.
    */
   private void updateTopicList() {
-    System.out.println("updateTopicList");
     if (this.topicList == null) { // initialize topicList
       this.topicList = new ArrayList<String>();
-      System.out.println("i made a new topicList");
     }
     // search through masterQuestionBank, update the list of all topics (no duplicate listings). create the list if it is currently null
-    System.out.println("going to enhanced for loop");
-    System.out.println("masterQuestionBank: "+masterQuestionBank.questions);
     for (Question q : masterQuestionBank.questions) {
-      System.out.println("im in a enhanced for loop");
       if (!this.topicList.contains(q.getQuestionTopic())) { // if topicList doesnt already have topic, add it
         this.topicList.add(q.getQuestionTopic());
       }
@@ -456,7 +432,12 @@ public class Main extends Application{
       
       for (Answer a : q.getAnswersList()) {
       //choice loop here
-        //
+        fileString += "\t{\"isCorrect\":\"" + a.getCorrectness() + "\",\"choice\":" + a.getAnswerText() + "\"}"; // TODO: last comma here wont be there for last choice, figure that out
+        // check for final answer, if so then dont add comma
+//        if (!q.getAnswersList()) {
+//          
+//        }
+        fileString += "\n\t\t\t]";
       }
     }
     
@@ -497,6 +478,13 @@ public class Main extends Application{
    */
   protected static void kill() {
     mainStage.close();
+  }
+  
+  /**
+   * To be called by Quiz Result -> exits all question scene windows
+   */
+  protected static void killAllQuestionScenes() {
+    firstQuestion.close();
   }
   
   public static void main(String[] args) {

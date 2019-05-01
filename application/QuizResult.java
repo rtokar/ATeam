@@ -44,11 +44,15 @@ public class QuizResult {
 		return (double)numCorrect/numAnswered*100;
 	}
 	
-	
+	/**
+	 * Creates a GUI to display the results of the quiz
+	 * @param primaryStage
+	 * @throws Exception
+	 */
 	public void start(Stage primaryStage) throws Exception {
 		try {
 			VBox root = new VBox(30);
-			double percent = getPercent();
+			double percent = getPercent(); // users score
 			Label label1 = new Label("	You answered " + numCorrect + " question(s) correctly.");
 			Label label2 = new Label("	You answered " + numAnswered + " total question(s).");
 			Label label3 = new Label("	Your score: " + percent + "%");
@@ -63,6 +67,7 @@ public class QuizResult {
 				label4 = new Label("	You rock! :D");
 			}
 			
+			// adds all the labels to the layout
 			root.getChildren().addAll(label1,label2,label3,label4);
 			Scene scene = new Scene(root, 300, 200);
 			primaryStage.setScene(scene);

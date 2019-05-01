@@ -165,7 +165,7 @@ public class QuestionScene extends Application {
 		}
 
 		//update the results :)
-		updateQuizResults(chosenAnswer.getCorrectenss());
+		updateQuizResults(chosenAnswer.getCorrectness());
 		//If last question, display quiz results
 		if(questionNumber + 1 == numQuizQuestions) {
 			Stage quizResultWindow = new Stage(); // make new window
@@ -191,7 +191,7 @@ public class QuestionScene extends Application {
 		Stage questionResultWindow = new Stage(); // make new window
 		questionResultWindow.initModality(Modality.WINDOW_MODAL); // lock user to new window
 		questionResultWindow.initOwner(this.mainStage);
-		QuestionResult save = new QuestionResult(chosenAnswer.getCorrectenss(), currQuestions, questionNumber, results);
+		QuestionResult save = new QuestionResult(chosenAnswer.getCorrectness(), currQuestions, questionNumber, results);
 		try {
 			save.start(questionResultWindow); // open new window
 		} catch (Exception e) {
