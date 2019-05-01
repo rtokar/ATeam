@@ -30,7 +30,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
-//other notes: display trueness of answer when making question?
+//other notes:
 
 /**
  * This is the main driver for the quiz generator.
@@ -67,6 +67,7 @@ public class Main extends Application{
   /**
    * Primary driver of the application, creates main GUI from which all functions and other GUIS stem from.
    */
+  @SuppressWarnings("unchecked")
   public void start(Stage primaryStage) {
     try {
       mainStage = primaryStage;
@@ -90,11 +91,6 @@ public class Main extends Application{
       TextField numQuestionsTextField = new TextField();
       numQuestionsTextField.setPromptText("<# of Questions, Press Enter>");
       
-        //Hard-coded list
-        //TODO change to getting from questions
-//      ObservableList<String> comboBoxList = FXCollections.observableArrayList("English", "Reading", "Quantum Physics");
-//      ObservableList<String> comboBoxList = FXCollections.observableArrayList(this.topicList); // observable list of topicList
-//      ComboBox<String> loadedTopicsComboBox = new ComboBox<String>(comboBoxList);
       loadedTopicsComboBox.setPromptText("<Select a Topic to add>");
       Label comboBoxLabel = new Label("<Load Questions to have Topics>");
       loadedTopicsComboBox.setPlaceholder(comboBoxLabel);
@@ -105,7 +101,7 @@ public class Main extends Application{
       Button clearTopicListButton = new Button("Clear Topic List");
       
       Label chosenTopicListLabel = new Label("Chosen Topics:");
-       // TODO: may need to make this a field too so we can update it as topics are added
+
       VBox topicLabels = new VBox(5);
       topicLabels.getChildren().addAll(numOfTopicQuestionsLabel, chosenTopicListLabel);
       
@@ -128,8 +124,7 @@ public class Main extends Application{
       
       // Set up actions for each ui component
       
-      // load quiz (via lambda expression, note can also do multi line expression by putting lines in {} after ->)
-      // loadQuestionsButton.setOnAction((event) -> System.out.println("loadQuizButton"));
+
       
       // display quiz using method reference, note that method must have an ActionEvent as parameter
       loadQuestionsButton.setOnAction(this::loadQuestions);
@@ -167,7 +162,7 @@ public class Main extends Application{
     File jsonFile = choose.showOpenDialog(chooseStage); // launch file choosing dialog box
     if (jsonFile != null) {
       try {
-      masterQuestionBank.addAllQuestions(jsonFile); // adds all questions from the chosen json file TODO: uncomment this and next line when QuestionBank is fixed, delete last line in this method, updateTopicList ill take care of it
+      masterQuestionBank.addAllQuestions(jsonFile); // adds all questions from the chosen json file
       System.out.println("added questions from file");
       } catch (FileNotFoundException e) {
         System.out.println("filenotfound exception");
@@ -200,7 +195,7 @@ public class Main extends Application{
     try {
       this.numQuizQuestions = Integer.parseInt(((TextField) event.getSource()).getText());
     } catch (NumberFormatException e) {
-      //TODO: throw popup that says to enter an int into text field in upper right -> vbox with label containing message and OK button to close window
+      
       Alert alert = new Alert(AlertType.ERROR);
       alert.setTitle("A Non-Integer Was Entered");
       alert.setHeaderText(null);
@@ -226,8 +221,8 @@ public class Main extends Application{
     System.out.println("addTopic()");
     System.out.println("currentTopics: "+this.currentTopics);
     this.chosenTopicsListView.setItems(FXCollections.observableArrayList(this.currentTopics)); // update visible list with added topic
-//    this.topicQuestionBank = masterQuestionBank.filterQuestions(this.currentTopics); // create the topicQuestionBank as a filtered masterQuestionBank TODO: check if Clarence is overloading filterQuestions()
-    this.topicQuestionBank = masterQuestionBank.filterQuestions(this.currentTopics.get(0)); // comment this out when above line is uncommented
+    this.topicQuestionBank = masterQuestionBank.filterQuestions(this.currentTopics); // create the topicQuestionBank as a filtered masterQuestionBank
+//    this.topicQuestionBank = masterQuestionBank.filterQuestions(this.currentTopics.get(0)); // comment this out when above line is uncommented
     this.numTopicQuestions = this.topicQuestionBank.questions.size(); 
 //    this.numTopicQuestions = 5;
     this.numOfTopicQuestionsLabel.setText("("+this.numTopicQuestions+" topic questions) / ("+this.numTotalQuestions+" total questions)");
@@ -240,7 +235,7 @@ public class Main extends Application{
   private void clearTopicList(ActionEvent event) {
     this.currentTopics = new ArrayList<String>(); // reset currentTopics with a blank ArrayList
     this.chosenTopicsListView.setItems(FXCollections.observableArrayList(this.currentTopics)); // update visible list
-    this.topicQuestionBank = null; //TODO: check that resetting topicQuestionBank like this when clearing topics doesnt break anything
+    this.topicQuestionBank = null;
     this.numTopicQuestions = 0;
     this.numOfTopicQuestionsLabel.setText("("+this.numTopicQuestions+" topic questions) / ("+this.numTotalQuestions+" total questions)");
     System.out.println("clearTopicList()");
@@ -260,8 +255,7 @@ public class Main extends Application{
     } catch (Exception e) {
       System.out.println(e.getMessage());
     }
-    // when questions are done being made, update the # of total questions label
-    this.updateNumOfQuestionsLabel();
+
   }
   
   /**
@@ -320,6 +314,14 @@ public class Main extends Application{
    * Displays quiz screen, maybe called from another class?
    */
   private void displayQuiz(ActionEvent event) {
+    if (quizQuestionBank == null)
+      try {
+        int numQs = Math.min(this.topicQuestionBank.questions.size(), this.numQuizQuestions);
+        this.quizQuestionBank = this.topicQuestionBank.getQuizQuestionBank(numQs);
+      } catch (Exception e) {
+        // do nothing
+      }
+      
     if (!(this.numQuizQuestions > 0)) { // check that appropriate int was entered in numQuestionsTextField and enter was pressed
       Alert alert = new Alert(AlertType.ERROR);
       alert.setTitle("Invalid Number of Quiz Questions");
@@ -327,7 +329,7 @@ public class Main extends Application{
       alert.setContentText("Invalid Number of Quiz Questions!\n\nPlease double check the \"number of questions\" text field in the upper right. Type in a positive integer and press the \"Enter\" key when you are done.");
       alert.showAndWait();
       
-    } else if (topicQuestionBank == null || !(topicQuestionBank.questions.size() > 0)) { // check that quizQuestionBank exists has at least one question in it, throw popup error //TODO change topicQuestionBank back to quizQuestionBank when clarence makes the random selection method
+    } else if (quizQuestionBank == null || !(quizQuestionBank.questions.size() > 0)) { // check that quizQuestionBank exists has at least one question in it, throw popup error
       // if no questions are loaded, tell the user such
       Alert alert = new Alert(AlertType.ERROR);
       alert.setTitle("No Questions Loaded");
@@ -337,11 +339,19 @@ public class Main extends Application{
       
     } else { // if it exists and has at least one question, open test window
       int numQs = Math.min(this.topicQuestionBank.questions.size(), this.numQuizQuestions); // gets the smaller of user-entered number and available quiz questions in topicQuestionBank
-      //this.quizQuestionBank = this.topicQuestionBank.randomPick(this.currentTopics, numQs); // TODO: double check with Clarence about randomly choosing questions from a question bank as a new bank
+      this.quizQuestionBank = this.topicQuestionBank.getQuizQuestionBank(numQs);
       Stage quizWindow = new Stage();
       QuestionScene quiz = new QuestionScene(this.topicQuestionBank, 0, new QuizResult()); // 0 is the starting question number
       quizWindow.initModality(Modality.WINDOW_MODAL); // lock user to new window
       quizWindow.initOwner(mainStage);
+      
+      //jake debug help
+      System.out.println("---------------");
+      for (int i = 0; i < quizQuestionBank.questions.get(0).getAnswersList().size(); i++) {
+        System.out.println(quizQuestionBank.questions.get(0).getAnswersList().get(i).getAnswerText());
+      }
+      System.out.println("---------------");
+      
       try {
         quiz.start(quizWindow);
         System.out.println("displayQuiz()");
@@ -383,6 +393,17 @@ public class Main extends Application{
     if (this.topicQuestionBank != null)
       this.numTopicQuestions = this.topicQuestionBank.questions.size();
     this.numOfTopicQuestionsLabel.setText("("+this.numTopicQuestions+" topic questions) / ("+this.numTotalQuestions+" total questions)");
+  }
+  
+  /**
+   * Intermediary method to add a question to the masterQuestionBank in order to properly 
+   * update topic list and displayed num of questions.
+   */
+  protected void addToMasterQuestionBank(Question q) {
+    masterQuestionBank.addQuestion(q);
+    // when questions are done being made, update the # of total questions label
+    this.updateTopicList();
+    this.updateNumOfQuestionsLabel();
   }
   
   /**
