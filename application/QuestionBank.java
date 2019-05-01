@@ -47,7 +47,7 @@ public class QuestionBank {
 		if(numQ >= questions.size()) {
 			return this;
 		}
-		while(counter <= numQ) {
+		while(counter < numQ) {
 			int rdInt = rd.nextInt(this.questions.size());
 			if(!used.contains(rdInt)) {
 				used.add(rdInt);
