@@ -151,7 +151,7 @@ public class QuestionScene extends Application {
 				chosenAnswer = question.getAnswersList().get(i);
 		}
 		
-		//update the results
+		//update the results :)
 		updateQuizResults(chosenAnswer.getCorrectenss());
 		//If last question, display quiz results
 		if(questionNumber + 1 == numQuizQuestions) {
