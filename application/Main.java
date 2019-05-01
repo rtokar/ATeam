@@ -1,6 +1,7 @@
 package application;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.application.Application;
@@ -23,6 +24,8 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 //other notes: display trueness of answer when making question?
 
@@ -268,13 +271,13 @@ public class Main extends Application{
     FileChooser choose = new FileChooser();
     choose.setTitle("Choose a .json file to load questions");
     FileChooser.ExtensionFilter filt = new FileChooser.ExtensionFilter(".json", "*.json"); // only allow .json files
-    choose.getExtensionFilters().add(filt);
+    choose.getExtensionFilters().add(filt); // TODO: .json files are still greyed out when selecting
     File initDirectory = new File("..");// set inital directory for searching as parent directory of this file
     choose.setInitialDirectory(initDirectory);
     File jsonFile = choose.showSaveDialog(chooseStage); // launch file choosing dialog box
     
     if (jsonFile != null) { // if a file was chosen
-      this.save(jsonFile); // save the masterQuestionBank in it
+      this.save2(jsonFile); // save the masterQuestionBank in it
       kill(); // close main GUI
     }
   }
@@ -320,7 +323,7 @@ public class Main extends Application{
       int numQs = Math.min(this.topicQuestionBank.questions.size(), this.numQuizQuestions); // gets the smaller of user-entered number and available quiz questions in topicQuestionBank
       this.quizQuestionBank = this.topicQuestionBank.randomPick(this.currentTopics, numQs); // TODO: double check with Clarence about randomly choosing questions from a question bank as a new bank
       Stage quizWindow = new Stage();
-      QuestionScene quiz = new QuestionScene(quizQuestionBank, 0); // 0 is the starting question number
+      QuestionScene quiz = new QuestionScene(quizQuestionBank, 0, new QuizResult()); // 0 is the starting question number
       quizWindow.initModality(Modality.WINDOW_MODAL); // lock user to new window
       quizWindow.initOwner(mainStage);
       try {
@@ -365,8 +368,73 @@ public class Main extends Application{
    * Saves the masterQuestionBank to the selected json file.
    * @parameter jsonFile is the file in which we will save the contents of masterQuestionBank
    */
+  @SuppressWarnings("unchecked")
   private void save(File jsonFile) {
     // save the question objects of masterQuestionBank in the provided json file
+    JSONObject jobj = new JSONObject();
+    JSONArray qlist = new JSONArray();
+    JSONArray meta = new JSONArray();
+    meta.add("this is the meta");
+    qlist.add(meta);
+    jobj.put("qlist", qlist);
+    
+    try {
+      FileWriter file = new FileWriter(jsonFile);
+      file.write(jobj.toJSONString());
+      file.close();
+      System.out.println("saved");
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
+    }
+    
+//    for (Question question : masterQuestionBank.questions) {
+//      JSONArray meta = new JSONArray();
+//      meta.add(""+question.getMetadata());
+//      qlist.add(meta);
+//      jobj.put("outside",qlist); 
+  }
+  
+  /**
+   * Saves the masterQuestionBank to the selected json file using strings instead of json objects
+   * @param jsonFile is the file in which we will save the contents of masterQuestionBank
+   */
+  private void save2(File jsonFile) {
+    String fileString = "";
+    fileString += "{\n\t\"questionArray\":\n\t[\n\t\t{"; // this brings us to the "meta-data" part of the json file
+//    for (Question q : masterQuestionBank.questions) {
+//      
+//    }
+    
+    //question loop here
+    fileString += "\"meta-data\":\""+ "metadata call here" +"\",\n\t\t\t";
+    fileString += "\"questionText\":\""+ "questionText call here" +"\",\n\t\t\t";
+    fileString += "\"topic\":\""+ "topic call here" +"\",\n\t\t\t";
+    fileString += "\"image\":\""+ "image call here" +"\",\n\t\t\t";
+    fileString += "\"choiceArray\":\n\t\t\t";
+    fileString += "[\n\t\t\t";
+    
+    //choice loop here
+    fileString += "\t{\"isCorrect\":\"" + "question.true?" + "\",\"choice\":" + "questionChoice" + "\"},"; // TODO: last comma here wont be there for last choice, figure that out
+    fileString += "\n\t\t\t]";
+    
+    //close choiceArray curly bracket
+    fileString += "\n\t\t},"; // TODO: only put comma here if there are other questions left (no comma on last question)
+    
+    //close questionArray bracket
+    fileString += "\n\t]";
+    //close whole file curly bracket
+    fileString += "\n}";
+    
+    try {
+      FileWriter file = new FileWriter(jsonFile);
+      file.write(fileString);
+      file.close();
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
+    }
+    
+        
+    
   }
   
   /**
