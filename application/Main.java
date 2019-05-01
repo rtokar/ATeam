@@ -60,6 +60,8 @@ public class Main extends Application{
   private Label numOfTopicQuestionsLabel = new Label("("+this.numTopicQuestions+" topic questions) / ("+this.numTotalQuestions+" total questions)"); // displays number of topic questions, updates when new topic is added to list of current topics
   
   protected static Boolean closeFlag = false; // quit windows can set this flag to true to close this main window after they close
+  
+  protected static Main mainInstance; // this is a weird Inception-style static field that hold the only instance of Main that will ever be created
                                                                                                 
   
   
@@ -70,6 +72,7 @@ public class Main extends Application{
   @SuppressWarnings("unchecked")
   public void start(Stage primaryStage) {
     try {
+      mainInstance = this;
       mainStage = primaryStage;
       
       //Create main window
@@ -399,11 +402,11 @@ public class Main extends Application{
    * Intermediary method to add a question to the masterQuestionBank in order to properly 
    * update topic list and displayed num of questions.
    */
-  protected void addToMasterQuestionBank(Question q) {
+  protected static void addToMasterQuestionBank(Question q) {
     masterQuestionBank.addQuestion(q);
     // when questions are done being made, update the # of total questions label
-    this.updateTopicList();
-    this.updateNumOfQuestionsLabel();
+    mainInstance.updateTopicList();
+    mainInstance.updateNumOfQuestionsLabel();
   }
   
   /**
