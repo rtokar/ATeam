@@ -18,15 +18,20 @@ import javafx.stage.Modality;
 public class QuizResult {
 	private int numCorrect; // number of questions correct
 	private int numAnswered; // number of questions answered
-	
-	// numCorrect setter
-	public void setNumCorrect(int num) {
-		this.numCorrect = num;
+
+	public QuizResult() {
+		numCorrect = 0;
+		numAnswered = 0;
 	}
 	
-	// numAnswered setter
-	public void setNumAnswered(int num) {
-		this.numAnswered = num;
+	// numCorrect incrementer
+	public void incNumCorrect() {
+		this.numCorrect++;
+	}
+	
+	// numAnswered incrementer
+	public void incNumAnswered() {
+		this.numAnswered++;
 	}
 	
 	/**

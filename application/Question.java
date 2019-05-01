@@ -1,7 +1,7 @@
 package application;
 
 import java.io.File;
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * An instance of a question that will contain a list 
@@ -13,18 +13,18 @@ import java.util.List;
 public class Question {
 	private String questionTopic; // the question topic value as a string
 	private String questionText; // the question that is being asked
-	private List<Answer> answers; // list of the Answer objects for question
+	private ArrayList<Answer> answers; // list of the Answer objects for question
 	private String metadata; // undetermined, but included to keep consistency with JSON file
 	private File imageFile; // image file name if question requires an image
 	
-	public Question(String topic, String text, List<Answer> answers, String metadata) {
+	public Question(String topic, String text, ArrayList<Answer> answers, String metadata) {
 		this.questionTopic = topic;
 		this.questionText = text;
 		this.answers = answers;
 		this.metadata = metadata;
 	}
 	
-	public Question(String topic, String text, List<Answer> answers, String metadata, File image) {
+	public Question(String topic, String text, ArrayList<Answer> answers, String metadata, File image) {
 		this.questionTopic = topic;
 		this.questionText = text;
 		this.answers = answers;
@@ -45,7 +45,7 @@ public class Question {
 		return questionText;
 	}
 	
-	public List<Answer> getAnswersList() {
+	public ArrayList<Answer> getAnswersList() {
 		return answers;
 	}
 	
