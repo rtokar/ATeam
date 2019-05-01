@@ -352,7 +352,7 @@ public class Main extends Application{
       alert.setContentText("No questions were loaded! \n\nCheck that you have selected a topic with the drop down menu and loaded it with the \"Add Topic\" button.");
       alert.showAndWait();
       
-    } else { // if it exists and has at least one question, open test window
+    } else { // if it exists and has at least one question, open test window 
       int numQs = Math.min(this.topicQuestionBank.questions.size(), this.numQuizQuestions); // gets the smaller of user-entered number and available quiz questions in topicQuestionBank
       this.quizQuestionBank = this.topicQuestionBank.getQuizQuestionBank(numQs);
       Stage quizWindow = new Stage();
