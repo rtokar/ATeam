@@ -24,7 +24,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-//other notes: display trueness of answer when making question
+//other notes: display trueness of answer when making question?
 
 /**
  * This is the main driver for the quiz generator.
