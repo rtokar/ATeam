@@ -432,7 +432,7 @@ public class Main extends Application{
       
       for (Answer a : q.getAnswersList()) {
       //choice loop here
-        
+        //
       }
     }
     
