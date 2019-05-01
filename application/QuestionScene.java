@@ -1,6 +1,7 @@
 package application;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import javafx.application.Application;
@@ -52,6 +53,7 @@ public class QuestionScene extends Application {
 		this.questionNumber = questionNumber;
 		this.numQuizQuestions = currQuestions.questions.size();
 		image = question.getImage();
+		answerButtons = new ArrayList<RadioButton>();
 	}
 
 
@@ -81,8 +83,13 @@ public class QuestionScene extends Application {
 
 			//Create the radio buttons with the answer values for the questions
 			group = new ToggleGroup();
+			System.out.println("question: " + question.getQuestionText());
+			System.out.println("answer: " + answers.get(0).getAnswerText());
+			System.out.println("answer list size: " + answers.size());
 			for(int i = 0; i < answers.size(); i++) {
-				answerButtons.add(new RadioButton(answers.get(i).getAnswerText()));
+				System.out.println("answer number i: " + answers.get(i).getAnswerText());
+				RadioButton tempButton = new RadioButton(answers.get(i).getAnswerText());
+				answerButtons.add(tempButton);
 				answerButtons.get(i).setToggleGroup(group);
 			}
 
@@ -94,9 +101,19 @@ public class QuestionScene extends Application {
 
 			//vBox2 Objects
 			//Create image for question
+
 			ImageView questionImage = new ImageView();
-			Image qImage = new Image(image.getPath());
+			Image qImage;
+			if(image != null) {
+				qImage = new Image(image.getPath());
+			}
+			else {
+				qImage = new Image("transparent.png");
+			}
 			questionImage.setImage(qImage);
+			questionImage.setPreserveRatio(true);
+			questionImage.setFitWidth(150);
+			
 			//Create Exit Quiz button to exit quiz
 			Button exitQuizButton = new Button("Exit");
 			//Create Submit button to submit question
@@ -111,7 +128,7 @@ public class QuestionScene extends Application {
 			mainStage.setScene(scene);
 			mainStage.setTitle("Question Scene");
 			mainStage.show();
-			
+
 			//Set the actions for the two buttons
 			exitQuizButton.setOnAction(this::backToMain);
 			submitButton.setOnAction(this::callPopBox);
@@ -136,8 +153,8 @@ public class QuestionScene extends Application {
 	 */
 	private void updateQuizResults (Boolean correct) {
 		if(correct)
-			results.incNumCorrect();//TODO tell rose to increment rather then set
-		results.incNumAnswered();//TODO tell rose to increment rather then 
+			results.incNumCorrect();
+		results.incNumAnswered();
 		return;
 	}
 	/**
@@ -150,7 +167,7 @@ public class QuestionScene extends Application {
 			if(answerButtons.get(i).isSelected())
 				chosenAnswer = question.getAnswersList().get(i);
 		}
-		
+
 		//update the results :)
 		updateQuizResults(chosenAnswer.getCorrectenss());
 		//If last question, display quiz results
@@ -163,9 +180,9 @@ public class QuestionScene extends Application {
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
 			}
-			
+
 		}
-		
+
 
 		//Else create new questionScene with next question
 		displayQuestionResult();
@@ -185,9 +202,9 @@ public class QuestionScene extends Application {
 			System.out.println(e.getMessage());
 		}
 	}
-	
+
 
 	public static void main(String[] args) {
-		launch(args);
+		Application.launch(args);
 	}
 }

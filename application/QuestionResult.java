@@ -50,7 +50,7 @@ public class QuestionResult extends Application{
 
 
 			bottom.getChildren().addAll(correctness, nextButton);
-
+			root.getChildren().add(bottom);
 			Scene scene = new Scene(root,375,350);
 			mainStage.setScene(scene);
 			mainStage.setTitle("QuestionResult");
