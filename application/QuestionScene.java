@@ -75,7 +75,8 @@ public class QuestionScene extends Application {
 
 			//vBox1 Objects
 			//Create Label for Question Number
-			Label questionNumberLabel = new Label("Question: " + questionNumber + 1 + "/" + numQuizQuestions);
+			int currNumber = questionNumber + 1;
+			Label questionNumberLabel = new Label("Question: " + currNumber + "/" + numQuizQuestions);
 
 			//Create question text label
 			Label questionText = new Label(question.getQuestionText());
@@ -104,7 +105,7 @@ public class QuestionScene extends Application {
 
 			ImageView questionImage = new ImageView();
 			Image qImage;
-			if(image != null) {
+			if(image.getPath() != null) {
 				qImage = new Image(image.getPath());
 			}
 			else {
