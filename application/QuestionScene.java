@@ -120,7 +120,7 @@ public class QuestionScene extends Application {
 			vBox2.getChildren().addAll(questionImage, exitQuizButton, submitButton);
 			root.getChildren().addAll(vBox1, vBox2);
 			//Create scene and update stage
-			Scene scene = new Scene(root,550, 700);
+			Scene scene = new Scene(root,550, 500);
 			mainStage.setScene(scene);
 			mainStage.setTitle("Question Scene");
 			mainStage.show();
