@@ -140,7 +140,14 @@ public class QuestionScene extends Application {
 	 * It will be called on quit
 	 */
 	private void backToMain(ActionEvent event) {
-		mainStage.close();
+		Stage quizResultWindow = new Stage(); // make new window
+		quizResultWindow.initModality(Modality.WINDOW_MODAL); // lock user to new window
+		quizResultWindow.initOwner(this.mainStage);
+		try {
+			results.start(quizResultWindow); // open new window
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
 	}
 	/**
 	 * This method will update the QuizResult class with whether the question
@@ -168,14 +175,7 @@ public class QuestionScene extends Application {
 		updateQuizResults(chosenAnswer.getCorrectness());
 		//If last question, display quiz results
 		if(questionNumber + 1 == numQuizQuestions) {
-			Stage quizResultWindow = new Stage(); // make new window
-			quizResultWindow.initModality(Modality.WINDOW_MODAL); // lock user to new window
-			quizResultWindow.initOwner(this.mainStage);
-			try {
-				results.start(quizResultWindow); // open new window
-			} catch (Exception e) {
-				System.out.println(e.getMessage());
-			}
+			backToMain(new ActionEvent());
 			return;
 		}
 
