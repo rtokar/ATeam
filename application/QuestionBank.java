@@ -74,7 +74,7 @@ public class QuestionBank {
         	String topic = (String) questionInfo.get("topic");
         	String image = (String) questionInfo.get("image");
         	JSONArray choiceArray = (JSONArray) questionInfo.get("choiceArray");
-        	List<Answer> answers = new ArrayList<Answer>();
+        	ArrayList<Answer> answers = new ArrayList<Answer>();
         	String True = "T";
         	
         	for(int j = 0 ; j < choiceArray.size();j++) {
