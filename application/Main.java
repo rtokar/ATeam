@@ -340,7 +340,7 @@ public class Main extends Application{
     }
 
   }
-
+//
   /**
    * Called when a new file is loaded and its questions are added to the masterQuestionBank.
    * Updates the topicList variable, reflecting all of the topics in the masterQuestionBank.
