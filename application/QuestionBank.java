@@ -5,6 +5,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+
 import org.json.simple.parser.ParseException;
 import java.io.IOException;
 
@@ -19,7 +21,7 @@ public class QuestionBank {
 	public QuestionBank() {
 	}
 	public QuestionBank(File jsonFilePath) throws FileNotFoundException, IOException, ParseException {
-		List<Question> questions = readJson(jsonFilePath);
+		questions = readJson(jsonFilePath);
 	}
 	protected QuestionBank filterQuestions(String indicatedTopic) {
 		List<Question> topicQuestionList = new ArrayList<Question>();
@@ -37,7 +39,41 @@ public class QuestionBank {
 	protected void addQuestion(Question question) {
 		questions.add(question);
 	}
+	protected QuestionBank getQuizQuestionBank(int numQ) {
+		QuestionBank QuizQuestionBank = new QuestionBank();
+		Random rd = new Random();
+		ArrayList<Integer> used = new ArrayList<Integer>();
+		int counter = 0;
+		if(numQ >= questions.size()) {
+			return this;
+		}
+		while(counter <= numQ) {
+			int rdInt = rd.nextInt(this.questions.size());
+			if(!used.contains(rdInt)) {
+				used.add(rdInt);
+				Question randomQuestion = this.questions.get(rdInt);
+				QuizQuestionBank.addQuestion(randomQuestion);
+				counter++;
+			}
+		}
+		return QuizQuestionBank;
+	}
 	
+	protected QuestionBank filterQuestions(List<String> indicatedTopic) {
+		List<Question> topicQuestionList = new ArrayList<Question>();
+		for(String topic:indicatedTopic) {
+			for(Question q: questions) {
+				if (q.getQuestionTopic().equals(topic)) {
+					topicQuestionList.add(q);
+				}
+			}
+		}
+		QuestionBank filteredBank = new QuestionBank();
+		for(int i = 0; i< topicQuestionList.size();i++) {
+			filteredBank.addQuestion(topicQuestionList.get(i));
+		}
+		return filteredBank;
+	}
 	protected void addAllQuestions(File jsonFile) throws FileNotFoundException, IOException, ParseException {
 		if(!fileTracker.contains(jsonFile.getAbsolutePath())) {
 			List<Question> questions = readJson(jsonFile);

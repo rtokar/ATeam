@@ -1,7 +1,9 @@
 package application;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.application.Application;
@@ -26,6 +28,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.ParseException;
 
 //other notes: display trueness of answer when making question?
 
@@ -36,7 +39,7 @@ import org.json.simple.JSONObject;
  */
 public class Main extends Application{
   
-  protected static QuestionBank masterQuestionBank; // bank of questions from all loaded json files
+  protected static QuestionBank masterQuestionBank = new QuestionBank(); // bank of questions from all loaded json files
   protected QuestionBank topicQuestionBank; // all questions with topic matching selected topics
   protected QuestionBank quizQuestionBank; // a subset of randomized questions from selected topics, 
                                            // number equal to numQuizQuestions (or num of qs in topicQuestionBank, whichever is lower)
@@ -165,7 +168,15 @@ public class Main extends Application{
     if (jsonFile != null) {
       try {
       masterQuestionBank.addAllQuestions(jsonFile); // adds all questions from the chosen json file TODO: uncomment this and next line when QuestionBank is fixed, delete last line in this method, updateTopicList ill take care of it
+      System.out.println("added questions from file");
+      } catch (FileNotFoundException e) {
+        System.out.println("filenotfound exception");
+      } catch (IOException e) {
+        System.out.println("io exception");
+      } catch (ParseException e) {
+        System.out.println("parse exception");
       } catch (Exception e) {
+        System.out.println("an exception was thrown while adding questions");
         System.out.println(e.getMessage());
       }
       this.updateTopicList();
@@ -316,7 +327,7 @@ public class Main extends Application{
       alert.setContentText("Invalid Number of Quiz Questions!\n\nPlease double check the \"number of questions\" text field in the upper right. Type in a positive integer and press the \"Enter\" key when you are done.");
       alert.showAndWait();
       
-    } else if (quizQuestionBank == null || !(quizQuestionBank.questions.size() > 0)) { // check that quizQuestionBank exists has at least one question in it, throw popup error 
+    } else if (topicQuestionBank == null || !(topicQuestionBank.questions.size() > 0)) { // check that quizQuestionBank exists has at least one question in it, throw popup error //TODO change topicQuestionBank back to quizQuestionBank when clarence makes the random selection method
       // if no questions are loaded, tell the user such
       Alert alert = new Alert(AlertType.ERROR);
       alert.setTitle("No Questions Loaded");
@@ -340,17 +351,22 @@ public class Main extends Application{
     }
 
   }
-//
+////
   /**
    * Called when a new file is loaded and its questions are added to the masterQuestionBank.
    * Updates the topicList variable, reflecting all of the topics in the masterQuestionBank.
    */
   private void updateTopicList() {
+    System.out.println("updateTopicList");
     if (this.topicList == null) { // initialize topicList
       this.topicList = new ArrayList<String>();
+      System.out.println("i made a new topicList");
     }
     // search through masterQuestionBank, update the list of all topics (no duplicate listings). create the list if it is currently null
+    System.out.println("going to enhanced for loop");
+    System.out.println("masterQuestionBank: "+masterQuestionBank.questions);
     for (Question q : masterQuestionBank.questions) {
+      System.out.println("im in a enhanced for loop");
       if (!this.topicList.contains(q.getQuestionTopic())) { // if topicList doesnt already have topic, add it
         this.topicList.add(q.getQuestionTopic());
       }
@@ -416,7 +432,7 @@ public class Main extends Application{
       
       for (Answer a : q.getAnswersList()) {
       //choice loop here
-        
+        //
       }
     }
     

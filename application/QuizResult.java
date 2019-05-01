@@ -41,6 +41,7 @@ public class QuizResult {
 	 * @return percentage correctly answered
 	 */
 	public double getPercent() {
+		if (numAnswered==0) {return 0;}
 		return numCorrect/numAnswered*100;	
 	}
 	
