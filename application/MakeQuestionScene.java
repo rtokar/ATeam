@@ -18,6 +18,8 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 
 /**
@@ -51,31 +53,41 @@ public class MakeQuestionScene extends Application {
 		      HBox root = new HBox(70);
 		      
 		      //Create both sides
-		      VBox vBox1 = new VBox(15);
+		      VBox vBox1 = new VBox(20);
 		      VBox vBox2 = new VBox(15);
 		      
 		      //Error/Null Label
 		      Label infoInvalidLabel = new Label("The required fields are not filled in");
+		      infoInvalidLabel.setFont(Font.font ("Comic Sans MS", 15));
+		      infoInvalidLabel.setTextFill(Color.RED);
 		      
 		      //Required Labels
 		      Label requiredLabel = new Label("This required fields are:");
 		      Label rl1 = new Label("-Question Topic");
 		      Label rl2 = new Label("-Question Text");
+		      requiredLabel.setFont(Font.font ("", 15));
 		      
-		      //vBox1 UI controls and labels
+		      VBox requiredText = new VBox(5);
+		      requiredText.getChildren().addAll(requiredLabel, rl1, rl2);
+		      
+		      
+		      //both vBoxes controls and UIs
 		      //Meta Data
 		      Label metaLabel = new Label("Meta-data");
+		      metaLabel.setFont(Font.font ("", 13));
 		      TextField metaField = new TextField();
 		      metaField.setMaxWidth(200);
 		      
 		      //Question Text Area
 		      Label questionTextLabel = new Label("Question Text");
+		      questionTextLabel.setFont(Font.font ("", 13));
 		      TextArea questionText = new TextArea();
 		      questionText.setMaxWidth(200);
 		      questionText.setMaxHeight(300);
 		      
 		      //Answer Data :)
 		      Label answerLabel = new Label("Answer Text");
+		      answerLabel.setFont(Font.font ("", 13));
 		      TextField answerField = new TextField();
 		      answerField.setMaxWidth(200);
 		      
@@ -116,10 +128,10 @@ public class MakeQuestionScene extends Application {
 		      
 		      listBox.getChildren().addAll(answerList, trueOrFalseList);
 		      
-		      //vbox2 UI controls and labels
-		      //Topic
+		      //Topic :)
 		      Label topicLabel = new Label("Topic");
 		      TextField topicField = new TextField();
+		      topicLabel.setFont(Font.font ("", 13));
 		     
 		     
 		      //Image getter here
@@ -163,7 +175,7 @@ public class MakeQuestionScene extends Application {
 		      });
 		      
 		      //VBox and HBox creation/updates
-		      vBox1.getChildren().addAll(requiredLabel, rl1, rl2, topicLabel, topicField,  questionTextLabel, 
+		      vBox1.getChildren().addAll(requiredText, topicLabel, topicField,  questionTextLabel, 
 		    		  questionText);
 		      vBox2.getChildren().addAll( metaLabel, metaField, imageHBox, answerLabel,  
 		    		  answerField, answerHBox, listBox, exitingMakeQuestion);
