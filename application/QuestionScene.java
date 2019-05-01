@@ -140,7 +140,7 @@ public class QuestionScene extends Application {
 	 * It will be called on quit
 	 */
 	private void backToMain(ActionEvent event) {
-		Stage quizResultWindow = new Stage(); // make new window
+		Stage quizResultWindow = new Stage(); // make new window 
 		quizResultWindow.initModality(Modality.WINDOW_MODAL); // lock user to new window
 		quizResultWindow.initOwner(this.mainStage);
 		try {
