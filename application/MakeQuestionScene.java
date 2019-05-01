@@ -5,6 +5,7 @@ import java.io.File;
 import java.util.ArrayList;
 //FX imports
 import javafx.application.Application;
+import javafx.geometry.Insets;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
@@ -47,7 +48,7 @@ public class MakeQuestionScene extends Application {
 		try {
 			
 		      //Create main window
-		      HBox root = new HBox(30);
+		      HBox root = new HBox(70);
 		      
 		      //Create both sides
 		      VBox vBox1 = new VBox(15);
@@ -71,6 +72,7 @@ public class MakeQuestionScene extends Application {
 		      Label questionTextLabel = new Label("Question Text");
 		      TextArea questionText = new TextArea();
 		      questionText.setMaxWidth(200);
+		      questionText.setMaxHeight(300);
 		      
 		      //Answer Data
 		      Label answerLabel = new Label("Answer Text");
@@ -88,7 +90,7 @@ public class MakeQuestionScene extends Application {
 		      
 		      //List of answers
 		      ListView<String> answerList = new ListView<String>();
-		      answerList.setMaxHeight(200);
+		      answerList.setMaxHeight(160);
 		      
 		      addAnswerButton.setOnAction(event -> {
 		    		  if (!answerField.getText().equals("") && !answerField.getText().equals("Please fill this field")) {
@@ -124,9 +126,6 @@ public class MakeQuestionScene extends Application {
 		      HBox imageHBox = new HBox(25);
 		      imageHBox.getChildren().addAll(imagePath, imagePickButton);
 		      
-		      Label imageLabel = new Label("Image Description");
-		      TextField imageField = new TextField();
-		      
 		      //Back and Make question buttons instance ends
 		      HBox exitingMakeQuestion  = new HBox(75);
 		      
@@ -139,7 +138,7 @@ public class MakeQuestionScene extends Application {
 		      //Make Question event handling
 		      makeQuestion.setOnAction(event -> {
 		    	  boolean flag = makeQuestionObject(topicField.getText(), questionText.getText(), 
-		    			  metaField.getText(), image, imageField.getText());
+		    			  metaField.getText(), image);
 		    	  if (flag) {
 			    	  exitMakeQuestion(primaryStage); 
 		    	  } else {
@@ -149,15 +148,19 @@ public class MakeQuestionScene extends Application {
 		      });
 		      
 		      //VBox and HBox creation/updates
-		      vBox1.getChildren().addAll(requiredLabel, rl1, rl2, metaLabel, metaField, questionTextLabel, questionText, answerLabel, 
-		    		  answerField, answerHBox, answerList);
-		      vBox2.getChildren().addAll(topicLabel, topicField, imageHBox, imageLabel, imageField,
+		      vBox1.getChildren().addAll(requiredLabel, rl1, rl2, topicLabel, topicField,  questionTextLabel, 
+		    		  questionText);
+		      vBox2.getChildren().addAll( metaLabel, metaField, imageHBox, answerLabel,  answerField, answerHBox, answerList,
 		    		  exitingMakeQuestion);
+		      
+		      vBox1.setPadding(new Insets(10, 0, 0, 25));
+		      vBox2.setPadding(new Insets(10, 25, 0, 0));
+		      
 		      //Two main boxes
 		      root.getChildren().addAll(vBox1, vBox2);
 		      
 		      //Create scene and update stage
-		      Scene scene = new Scene(root,550, 700);
+		      Scene scene = new Scene(root,575, 450);
 		      primaryStage.setScene(scene);
 		      primaryStage.setTitle("Make Question");
 		      primaryStage.show();
@@ -174,7 +177,7 @@ public class MakeQuestionScene extends Application {
 	 * @Returns a boolean for whether this process succeeded or failed
 	 */
 	private boolean makeQuestionObject(String questionTopic, String questionText, String metaData, 
-			File image, String imageDescription) {
+			File image) {
 		if (!questionTopic.equals("")) 
 				if (!questionText.equals("")) {
 					//Makes Question if image is null
@@ -183,11 +186,9 @@ public class MakeQuestionScene extends Application {
 						Main.masterQuestionBank.addQuestion(newQuestion);
 						//Makes Question if image is not null
 					} else {
-						//Add String imageDescription to second constructor for question //TODO
-						//Question newQuestion = new Question(questionTopic, questionText, answerListObject, metaData,
-						//	image, imageDescription);
-						//Main.masterQuestionBank.addQuestion(newQuestion);
-						//ADD TO QUESTION BANK //TODO
+						Question newQuestion = new Question(questionTopic, questionText, answerListObject, metaData,
+							image);
+						Main.masterQuestionBank.addQuestion(newQuestion);
 					}
 					return true;
 				}
