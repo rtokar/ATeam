@@ -424,7 +424,7 @@ public class Main extends Application{
     fileString += "\n\t]";
     //close whole file curly bracket
     fileString += "\n}";
-    
+    //
     try {
       FileWriter file = new FileWriter(jsonFile);
       file.write(fileString);
