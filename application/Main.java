@@ -232,7 +232,7 @@ public class Main extends Application{
       alert.showAndWait();
     }
   }
-  
+  //
   /**
    * Called when the addTopicButton is pressed.
    * Adds the currently selected topic in the loadedTopicsComboBox to the currentTopics (no duplicates)
