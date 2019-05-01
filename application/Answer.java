@@ -9,7 +9,7 @@ package application;
  *
  */
 public class Answer {
-	private boolean correctness; // determines if this answer is for the question
+	private boolean correctness; // determines if this answer is correct for the question
 	private String answerText; // what the answer text is (eg: Time complexity is O(N))
 	
 	public Answer(boolean correctness, String answerText) {

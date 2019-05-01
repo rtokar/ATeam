@@ -76,6 +76,8 @@ public class QuizResult {
 		} catch(Exception e) {
 			System.out.println(e.getMessage());
 		}
+		// close the previous screens
+		primaryStage.setOnCloseRequest(event -> Main.killAllQuestionScenes());
 	}
 	
 
