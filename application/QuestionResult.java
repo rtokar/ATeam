@@ -67,7 +67,7 @@ public class QuestionResult extends Application{
 	public void displayNextQuestionScene(ActionEvent event) {
 		Stage quizWindow = new Stage();
 		QuestionScene quiz = new QuestionScene(currQuestions, questionNumber+1, results); // 0 is start
-		quizWindow.initModality(Modality.WINDOW_MODAL); // lock user to new window
+		quizWindow.initModality(Modality.WINDOW_MODAL); // lock user to new window 
 		quizWindow.initOwner(this.mainStage);
 		try {
 			quiz.start(quizWindow);
