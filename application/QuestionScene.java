@@ -84,11 +84,7 @@ public class QuestionScene extends Application {
 
 			//Create the radio buttons with the answer values for the questions
 			group = new ToggleGroup();
-			System.out.println("question: " + question.getQuestionText());
-			System.out.println("answer: " + answers.get(0).getAnswerText());
-			System.out.println("answer list size: " + answers.size());
 			for(int i = 0; i < answers.size(); i++) {
-				System.out.println("answer number i: " + answers.get(i).getAnswerText());
 				RadioButton tempButton = new RadioButton(answers.get(i).getAnswerText());
 				answerButtons.add(tempButton);
 				answerButtons.get(i).setToggleGroup(group);
@@ -105,7 +101,7 @@ public class QuestionScene extends Application {
 
 			ImageView questionImage = new ImageView();
 			Image qImage; 
-			if(image.getPath() != null) {
+			if(image != null && image.getPath() != null) {
 				qImage = new Image(image.toURI().toString());
 			}
 			else {
@@ -113,7 +109,7 @@ public class QuestionScene extends Application {
 			}
 			questionImage.setImage(qImage);
 			questionImage.setPreserveRatio(true);
-			questionImage.setFitWidth(150);
+			questionImage.setFitWidth(300);
 			
 			//Create Exit Quiz button to exit quiz
 			Button exitQuizButton = new Button("Exit");
@@ -122,7 +118,6 @@ public class QuestionScene extends Application {
 
 			//Add UI Objects to vBox2
 			vBox2.getChildren().addAll(questionImage, exitQuizButton, submitButton);
-
 			root.getChildren().addAll(vBox1, vBox2);
 			//Create scene and update stage
 			Scene scene = new Scene(root,550, 700);
@@ -181,7 +176,7 @@ public class QuestionScene extends Application {
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
 			}
-
+			return;
 		}
 
 
