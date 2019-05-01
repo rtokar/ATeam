@@ -4,8 +4,7 @@ import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.application.Application;
 import javafx.scene.control.Label;
-import javafx.scene.layout.BorderPane;
-import javafx.stage.Modality;
+import javafx.scene.layout.VBox;
 
 /**
  * Created when the user takes a quiz, keeps track of correct 
@@ -42,20 +41,30 @@ public class QuizResult {
 	 */
 	public double getPercent() {
 		if (numAnswered==0) {return 0;}
-		return numCorrect/numAnswered*100;	
+		return (double)numCorrect/numAnswered*100;
 	}
 	
 	
 	public void start(Stage primaryStage) throws Exception {
 		try {
-			BorderPane root = new BorderPane();
-			Label label1 = new Label("You answered " + numCorrect + " question(s) correctly.");
-			Label label2 = new Label("You answered " + numAnswered + " total question(s).");
-			Label label3 = new Label("Your score: " + getPercent() + "%");
-			root.setCenter(label1);
-			root.setCenter(label2);
-			root.setCenter(label3);
-			Scene scene = new Scene(root, 400, 300);
+			VBox root = new VBox(30);
+			double percent = getPercent();
+			Label label1 = new Label("	You answered " + numCorrect + " question(s) correctly.");
+			Label label2 = new Label("	You answered " + numAnswered + " total question(s).");
+			Label label3 = new Label("	Your score: " + percent + "%");
+			Label label4;
+			if (percent<50) {
+				label4 = new Label("	Practice makes perfect!");
+			} else if (percent>=50 && percent<80) {
+				label4 = new Label("	Almost there, keep practicing!");
+			} else if (percent>=80 && percent<100) {
+				label4 = new Label("	Keep up the great work! :)");
+			} else {
+				label4 = new Label("	You rock! :D");
+			}
+			
+			root.getChildren().addAll(label1,label2,label3,label4);
+			Scene scene = new Scene(root, 300, 200);
 			primaryStage.setScene(scene);
 			primaryStage.setTitle("Quiz Results");
 			primaryStage.show();
