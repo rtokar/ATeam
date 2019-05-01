@@ -47,7 +47,7 @@ public class Main extends Application{
   
   protected List<String> topicList = new ArrayList<String>(); // list of topics from masterQuestionBank
   protected List<String> currentTopics; // list of chosen topics from topicList
-  protected int numQuizQuestions; // num entered in the TextField numQuestionsTextField
+  protected int numQuizQuestions = 0; // num entered in the TextField numQuestionsTextField
   protected String selectedTopic; // topic currently selected with the loadedTopicsComboBox
   
   private static Stage mainStage;
@@ -328,13 +328,14 @@ public class Main extends Application{
    * Displays quiz screen, maybe called from another class?
    */
   private void displayQuiz(ActionEvent event) {
-    if (quizQuestionBank == null)
-      try {
-        int numQs = Math.min(this.topicQuestionBank.questions.size(), this.numQuizQuestions);
-        this.quizQuestionBank = this.topicQuestionBank.getQuizQuestionBank(numQs);
-      } catch (Exception e) {
+
+    try {
+      int numQs = Math.min(this.topicQuestionBank.questions.size(), this.numQuizQuestions);
+      this.quizQuestionBank = this.topicQuestionBank.getQuizQuestionBank(numQs);
+      System.out.println("numQs: "+numQs);
+    } catch (Exception e) {
         // do nothing
-      }
+    }
       
     if (!(this.numQuizQuestions > 0)) { // check that appropriate int was entered in numQuestionsTextField and enter was pressed
       Alert alert = new Alert(AlertType.ERROR);
@@ -368,7 +369,7 @@ public class Main extends Application{
     }
 
   }
-////
+
   /**
    * Called when a new file is loaded and its questions are added to the masterQuestionBank.
    * Updates the topicList variable, reflecting all of the topics in the masterQuestionBank.
