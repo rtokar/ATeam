@@ -106,7 +106,7 @@ public class QuestionScene extends Application {
 			ImageView questionImage = new ImageView();
 			Image qImage; 
 			if(image.getPath() != null) {
-				qImage = new Image(image.getName());
+				qImage = new Image(image.toURI().toString());
 			}
 			else {
 				qImage = new Image("transparent.png");
