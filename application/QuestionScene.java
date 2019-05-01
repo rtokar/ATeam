@@ -1,16 +1,13 @@
 package application;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.stage.FileChooser;
 import javafx.stage.Modality;
-import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -45,10 +42,11 @@ public class QuestionScene extends Application {
 	Answer chosenAnswer;
 	Stage mainStage;
 
-	QuestionScene(QuestionBank currQuestions, int questionNumber){
+	QuestionScene(QuestionBank currQuestions, int questionNumber, QuizResult quizResult){
 		question = currQuestions.questions.get(questionNumber);
 		this.currQuestions= currQuestions;
 		answers = question.getAnswersList();
+		results = quizResult;
 		this.questionNumber = questionNumber;
 		this.numQuizQuestions = currQuestions.questions.size();
 		image = question.getImage();
@@ -124,8 +122,7 @@ public class QuestionScene extends Application {
 	 * It will be called on quit
 	 */
 	private void backToMain(ActionEvent event) {
-		//TODO this will need to return to Main's state it was in before calling QuestionScene
-		return;
+		mainStage.close();
 	}
 	/**
 	 * This method will update the QuizResult class with whether the question
@@ -133,7 +130,9 @@ public class QuestionScene extends Application {
 	 * @param Boolean correct, whether it was correct or not
 	 */
 	private void updateQuizResults (Boolean correct) {
-		//TODO this will need to call setters or QuizResults
+		if(correct)
+			results.setNumCorrect();//TODO tell rose to increment rather then set
+		results.setNumAnswered();//TODO tell rose to increment rather then 
 		return;
 	}
 	/**
@@ -145,8 +144,18 @@ public class QuestionScene extends Application {
 		//update the results
 		updateQuizResults(chosenAnswer.getCorrectenss());
 		//If last question, display quiz results
-		if(questionNumber + 1 == numQuizQuestions);
-		//TODO displays QuizResult
+		if(questionNumber + 1 == numQuizQuestions) {
+			Stage quizResultWindow = new Stage(); // make new window
+			quizResultWindow.initModality(Modality.WINDOW_MODAL); // lock user to new window
+			quizResultWindow.initOwner(this.mainStage);
+			try {
+				results.start(quizResultWindow); // open new window
+			} catch (Exception e) {
+				System.out.println(e.getMessage());
+			}
+			
+		}
+		
 
 		//Else create new questionScene with next question
 		displayQuestionResult();
@@ -159,21 +168,9 @@ public class QuestionScene extends Application {
 		Stage questionResultWindow = new Stage(); // make new window
 		questionResultWindow.initModality(Modality.WINDOW_MODAL); // lock user to new window
 		questionResultWindow.initOwner(this.mainStage);
-		QuestionResult save = new QuestionResult(chosenAnswer.getCorrectenss());
+		QuestionResult save = new QuestionResult(chosenAnswer.getCorrectenss(), currQuestions, questionNumber, results);
 		try {
 			save.start(questionResultWindow); // open new window
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
-	}
-
-	public void displayNextQuestionScene(ActionEvent event) {
-		Stage quizWindow = new Stage();
-		QuestionScene quiz = new QuestionScene(currQuestions, questionNumber+1); // 0 is start
-		quizWindow.initModality(Modality.WINDOW_MODAL); // lock user to new window
-		quizWindow.initOwner(this.mainStage);
-		try {
-			quiz.start(quizWindow);
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}

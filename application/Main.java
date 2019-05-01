@@ -163,12 +163,16 @@ public class Main extends Application{
     choose.setInitialDirectory(initDirectory);
     File jsonFile = choose.showOpenDialog(chooseStage); // launch file choosing dialog box
     if (jsonFile != null) {
-      //masterQuestionBank.addAllQuestions(jsonFile); // adds all questions from the chosen json file TODO: uncomment this and next line when QuestionBank is fixed, delete last line in this method, updateTopicList ill take care of it
-      //this.updateTopicList();
-      this.topicList.add("blarg"); this.topicList.add("blarg2");
+      try {
+      masterQuestionBank.addAllQuestions(jsonFile); // adds all questions from the chosen json file TODO: uncomment this and next line when QuestionBank is fixed, delete last line in this method, updateTopicList ill take care of it
+      } catch (Exception e) {
+        System.out.println(e.getMessage());
+      }
+      this.updateTopicList();
+//      this.topicList.add("blarg"); this.topicList.add("blarg2");
       this.loadedTopicsComboBox.setItems(FXCollections.observableArrayList(this.topicList)); // update topic list after loading new questions from file
-      //this.numTotalQuestions = masterQuestionBank.questions.size();
-      this.numTotalQuestions = 23;
+      this.numTotalQuestions = masterQuestionBank.questions.size();
+//      this.numTotalQuestions = 23;
       this.numOfTopicQuestionsLabel.setText("("+this.numTopicQuestions+" topic questions) / ("+this.numTotalQuestions+" total questions)");
     }
 
@@ -211,9 +215,10 @@ public class Main extends Application{
     System.out.println("addTopic()");
     System.out.println("currentTopics: "+this.currentTopics);
     this.chosenTopicsListView.setItems(FXCollections.observableArrayList(this.currentTopics)); // update visible list with added topic
-    //this.topicQuestionBank = masterQuestionBank.filterQuestions(this.currentTopics); // create the topicQuestionBank as a filtered masterQuestionBank TODO: check if Clarence is overloading filterQuestions()
-    //this.numTopicQuestions = this.topicQuestionBank.questions.size();
-    this.numTopicQuestions = 5;
+//    this.topicQuestionBank = masterQuestionBank.filterQuestions(this.currentTopics); // create the topicQuestionBank as a filtered masterQuestionBank TODO: check if Clarence is overloading filterQuestions()
+    this.topicQuestionBank = masterQuestionBank.filterQuestions(this.currentTopics.get(0)); // comment this out when above line is uncommented
+    this.numTopicQuestions = this.topicQuestionBank.questions.size(); 
+//    this.numTopicQuestions = 5;
     this.numOfTopicQuestionsLabel.setText("("+this.numTopicQuestions+" topic questions) / ("+this.numTotalQuestions+" total questions)");
   }
   
@@ -321,9 +326,9 @@ public class Main extends Application{
       
     } else { // if it exists and has at least one question, open test window
       int numQs = Math.min(this.topicQuestionBank.questions.size(), this.numQuizQuestions); // gets the smaller of user-entered number and available quiz questions in topicQuestionBank
-      this.quizQuestionBank = this.topicQuestionBank.randomPick(this.currentTopics, numQs); // TODO: double check with Clarence about randomly choosing questions from a question bank as a new bank
+      //this.quizQuestionBank = this.topicQuestionBank.randomPick(this.currentTopics, numQs); // TODO: double check with Clarence about randomly choosing questions from a question bank as a new bank
       Stage quizWindow = new Stage();
-      QuestionScene quiz = new QuestionScene(quizQuestionBank, 0, new QuizResult()); // 0 is the starting question number
+      QuestionScene quiz = new QuestionScene(this.topicQuestionBank, 0, new QuizResult()); // 0 is the starting question number
       quizWindow.initModality(Modality.WINDOW_MODAL); // lock user to new window
       quizWindow.initOwner(mainStage);
       try {
@@ -335,7 +340,7 @@ public class Main extends Application{
     }
 
   }
-
+//
   /**
    * Called when a new file is loaded and its questions are added to the masterQuestionBank.
    * Updates the topicList variable, reflecting all of the topics in the masterQuestionBank.
@@ -401,20 +406,30 @@ public class Main extends Application{
   private void save2(File jsonFile) {
     String fileString = "";
     fileString += "{\n\t\"questionArray\":\n\t[\n\t\t{"; // this brings us to the "meta-data" part of the json file
-//    for (Question q : masterQuestionBank.questions) {
-//      
-//    }
+    for (Question q : masterQuestionBank.questions) {
+      fileString += "\"meta-data\":\""+ q.getMetadata() +"\",\n\t\t\t";
+      fileString += "\"questionText\":\""+ q.getQuestionText() +"\",\n\t\t\t";
+      fileString += "\"topic\":\""+ q.getQuestionTopic() +"\",\n\t\t\t";
+      fileString += "\"image\":\""+ q.getImage() +"\",\n\t\t\t";
+      fileString += "\"choiceArray\":\n\t\t\t";
+      fileString += "[\n\t\t\t";
+      
+      for (Answer a : q.getAnswersList()) {
+      //choice loop here
+        
+      }
+    }
     
-    //question loop here
-    fileString += "\"meta-data\":\""+ "metadata call here" +"\",\n\t\t\t";
-    fileString += "\"questionText\":\""+ "questionText call here" +"\",\n\t\t\t";
-    fileString += "\"topic\":\""+ "topic call here" +"\",\n\t\t\t";
-    fileString += "\"image\":\""+ "image call here" +"\",\n\t\t\t";
-    fileString += "\"choiceArray\":\n\t\t\t";
-    fileString += "[\n\t\t\t";
+//    //question loop here
+//    fileString += "\"meta-data\":\""+ "metadata call here" +"\",\n\t\t\t";
+//    fileString += "\"questionText\":\""+ "questionText call here" +"\",\n\t\t\t";
+//    fileString += "\"topic\":\""+ "topic call here" +"\",\n\t\t\t";
+//    fileString += "\"image\":\""+ "image call here" +"\",\n\t\t\t";
+//    fileString += "\"choiceArray\":\n\t\t\t";
+//    fileString += "[\n\t\t\t";
     
     //choice loop here
-    fileString += "\t{\"isCorrect\":\"" + "question.true?" + "\",\"choice\":" + "questionChoice" + "\"},"; // TODO: last comma here wont be there for last choice, figure that out
+    fileString += "\t{\"isCorrect\":\"" + "question.true?" + "\",\"choice\":" + "\"questionChoice" + "\"},"; // TODO: last comma here wont be there for last choice, figure that out
     fileString += "\n\t\t\t]";
     
     //close choiceArray curly bracket
