@@ -210,7 +210,10 @@ public class Main extends Application{
   private void getNumQuestions(ActionEvent event) {
     System.out.println("pressed enter");
     try {
-      this.numQuizQuestions = Integer.parseInt(((TextField) event.getSource()).getText());
+      int n = Integer.parseInt(((TextField) event.getSource()).getText());
+      if (n < 1)
+        throw new Exception();
+      this.numQuizQuestions = n;
     } catch (NumberFormatException e) {
       
       Alert alert = new Alert(AlertType.ERROR);
@@ -220,9 +223,16 @@ public class Main extends Application{
       alert.showAndWait();
       
       System.out.println("no int!");
+    } catch (Exception e) {
+      
+      Alert alert = new Alert(AlertType.ERROR);
+      alert.setTitle("An Invalid Integer Was Entered");
+      alert.setHeaderText(null);
+      alert.setContentText("An invalid integer was entered!\n\nPlease type a positive integer in this field and press the \"Enter\" key.");
+      alert.showAndWait();
     }
   }
-  
+  //
   /**
    * Called when the addTopicButton is pressed.
    * Adds the currently selected topic in the loadedTopicsComboBox to the currentTopics (no duplicates)
