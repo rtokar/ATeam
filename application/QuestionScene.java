@@ -122,8 +122,7 @@ public class QuestionScene extends Application {
 	 * It will be called on quit
 	 */
 	private void backToMain(ActionEvent event) {
-		//TODO this will need to return to Main's state it was in before calling QuestionScene
-		return;
+		mainStage.close();
 	}
 	/**
 	 * This method will update the QuizResult class with whether the question
@@ -131,7 +130,9 @@ public class QuestionScene extends Application {
 	 * @param Boolean correct, whether it was correct or not
 	 */
 	private void updateQuizResults (Boolean correct) {
-		//TODO this will need to call setters or QuizResults
+		if(correct)
+			results.setNumCorrect();//TODO tell rose to increment rather then set
+		results.setNumAnswered();//TODO tell rose to increment rather then 
 		return;
 	}
 	/**
@@ -143,8 +144,18 @@ public class QuestionScene extends Application {
 		//update the results
 		updateQuizResults(chosenAnswer.getCorrectenss());
 		//If last question, display quiz results
-		if(questionNumber + 1 == numQuizQuestions);
-		//TODO displays QuizResult
+		if(questionNumber + 1 == numQuizQuestions) {
+			Stage quizResultWindow = new Stage(); // make new window
+			quizResultWindow.initModality(Modality.WINDOW_MODAL); // lock user to new window
+			quizResultWindow.initOwner(this.mainStage);
+			try {
+				results.start(quizResultWindow); // open new window
+			} catch (Exception e) {
+				System.out.println(e.getMessage());
+			}
+			
+		}
+		
 
 		//Else create new questionScene with next question
 		displayQuestionResult();
