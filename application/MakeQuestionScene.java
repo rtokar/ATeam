@@ -80,7 +80,7 @@ public class MakeQuestionScene extends Application {
 		      answerField.setMaxWidth(200);
 		      
 		      //Box for if correct answer and Add abswer button
-		      HBox answerHBox = new HBox(70);
+		      HBox answerHBox = new HBox(25);
 		      
 		      //Checked if correct answer
 		  	  CheckBox isCorrectAnswer = new CheckBox("Correct Answer"); 
@@ -91,15 +91,30 @@ public class MakeQuestionScene extends Application {
 		      //List of answers
 		      ListView<String> answerList = new ListView<String>();
 		      answerList.setMaxHeight(160);
+		      answerList.setMaxWidth(160);
+		      //List for Either True or false
+		      ListView<String> trueOrFalseList = new ListView<String>();
+		      trueOrFalseList.setMaxHeight(160);
+		      trueOrFalseList.setMaxWidth(25);
+		      
+		      //HBox for both of the lists
+		      HBox listBox = new HBox(25);
+		      
 		      
 		      addAnswerButton.setOnAction(event -> {
 		    		  if (!answerField.getText().equals("") && !answerField.getText().equals("Please fill this field")) {
 		    			  answerListObject.add(new Answer(isCorrectAnswer.isSelected(), answerField.getText()));
 		    			  answerList.getItems().add(answerField.getText());
+		    			  if (isCorrectAnswer.isSelected())
+		    				  trueOrFalseList.getItems().add("T");
+		    			  else 
+		    				  trueOrFalseList.getItems().add("F");
 		    		  } else {
 		    			  answerField.setText("Please fill this field");
 		    		  }
 		      });
+		      
+		      listBox.getChildren().addAll(answerList, trueOrFalseList);
 		      
 		      //vbox2 UI controls and labels
 		      //Topic
@@ -150,8 +165,8 @@ public class MakeQuestionScene extends Application {
 		      //VBox and HBox creation/updates
 		      vBox1.getChildren().addAll(requiredLabel, rl1, rl2, topicLabel, topicField,  questionTextLabel, 
 		    		  questionText);
-		      vBox2.getChildren().addAll( metaLabel, metaField, imageHBox, answerLabel,  answerField, answerHBox, answerList,
-		    		  exitingMakeQuestion);
+		      vBox2.getChildren().addAll( metaLabel, metaField, imageHBox, answerLabel,  
+		    		  answerField, answerHBox, listBox, exitingMakeQuestion);
 		      
 		      vBox1.setPadding(new Insets(10, 0, 0, 25));
 		      vBox2.setPadding(new Insets(10, 25, 0, 0));
