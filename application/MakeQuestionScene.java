@@ -19,6 +19,13 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 
+/**
+ * This class is the GUI for making a question along with the
+ * creation of said object and passing it into the main question bank.
+ * 
+ * @author Hunter Celeste
+ *
+ */
 public class MakeQuestionScene extends Application {
 
 	//Fields
@@ -146,6 +153,7 @@ public class MakeQuestionScene extends Application {
 		    		  answerField, answerHBox, answerList);
 		      vBox2.getChildren().addAll(topicLabel, topicField, imageHBox, imageLabel, imageField,
 		    		  exitingMakeQuestion);
+		      //Two main boxes
 		      root.getChildren().addAll(vBox1, vBox2);
 		      
 		      //Create scene and update stage
@@ -159,7 +167,7 @@ public class MakeQuestionScene extends Application {
 		}
 	}
 	
-	/*
+	/**
 	 * This method is used to detect if the input entered by the user is
 	 * correct and if so to then make a question, put it in the main question bank, and 
 	 * close the make question scene
@@ -186,14 +194,14 @@ public class MakeQuestionScene extends Application {
 		return false;
 	} //End of MakeQuestionObject method
 
-	/*
-	 *  This method is respondsible for exiting the stage
+	/**
+	 *  This method is responsible for exiting the stage
 	 */
 	private void exitMakeQuestion(Stage primaryStage) {
 		primaryStage.close();
 	} //End of exitMakeQuestion method
 	
-	/*
+	/**
 	 *  This launches the
 	 */
 	public static void main(String[] args) {
