@@ -141,18 +141,11 @@ public class MakeQuestionScene extends Application {
 		    	  }
 		      });
 		      
-		      //Test Button to be removed //TODO
-		      Button test = new Button("test");
-		      test.setOnAction(event -> {
-		    		  System.out.println(answerListObject.toString());
-			      });
-		      //End of test method
-		      
 		      //VBox and HBox creation/updates
 		      vBox1.getChildren().addAll(requiredLabel, rl1, rl2, metaLabel, metaField, questionTextLabel, questionText, answerLabel, 
 		    		  answerField, answerHBox, answerList);
 		      vBox2.getChildren().addAll(topicLabel, topicField, imageHBox, imageLabel, imageField,
-		    		  exitingMakeQuestion, test);
+		    		  exitingMakeQuestion);
 		      root.getChildren().addAll(vBox1, vBox2);
 		      
 		      //Create scene and update stage
@@ -179,8 +172,7 @@ public class MakeQuestionScene extends Application {
 					//Makes Question if image is null
 					if (image == null) {
 						Question newQuestion = new Question(questionTopic, questionText, answerListObject, metaData);
-						//ADD TO QUESTION BANK //TODO
-						//Main.masterQuestionBank.addQuestion(newQuestion);
+						Main.masterQuestionBank.addQuestion(newQuestion);
 						//Makes Question if image is not null
 					} else {
 						//Add String imageDescription to second constructor for question //TODO
@@ -192,13 +184,20 @@ public class MakeQuestionScene extends Application {
 					return true;
 				}
 		return false;
-	}
+	} //End of MakeQuestionObject method
 
+	/*
+	 *  This method is respondsible for exiting the stage
+	 */
 	private void exitMakeQuestion(Stage primaryStage) {
 		primaryStage.close();
-	}
+	} //End of exitMakeQuestion method
 	
+	/*
+	 *  This launches the
+	 */
 	public static void main(String[] args) {
 		launch(args);
-	}
-}
+	} //End of main method
+
+} //End of MakeQuestionScene Class
