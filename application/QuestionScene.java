@@ -166,10 +166,13 @@ public class QuestionScene extends Application {
 	 * When it calls a new QuestionScene, it must pass currTopics
 	 */
 	private void callPopBox(ActionEvent event) {
+		chosenAnswer = null;
 		for(int i=0; i < answerButtons.size(); i++) {
 			if(answerButtons.get(i).isSelected())
 				chosenAnswer = question.getAnswersList().get(i);
 		}
+		if(chosenAnswer == null)
+			return;
 
 		//update the results :)
 		updateQuizResults(chosenAnswer.getCorrectness());
