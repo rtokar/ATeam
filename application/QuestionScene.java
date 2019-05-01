@@ -104,7 +104,7 @@ public class QuestionScene extends Application {
 			//Create image for question
 
 			ImageView questionImage = new ImageView();
-			Image qImage;
+			Image qImage; 
 			if(image.getPath() != null) {
 				qImage = new Image(image.getPath());
 			}
