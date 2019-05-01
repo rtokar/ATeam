@@ -141,56 +141,27 @@ public class Main extends Application{
       clearTopicListButton.setOnAction(this::clearTopicList);
       numQuestionsTextField.setOnAction(this::getNumQuestions);
       loadedTopicsComboBox.setOnAction((event) -> this.selectedTopic = ((ComboBoxBase<String>) event.getSource()).getValue()); // sets the selected topic when a topic is selected
-      // use lambda expression instead, copy over the stuff
-      //mainStage.setOnCloseRequest(this::displayNoSaveExit);  // attempt to make NoSaveAndQuit happen when pressing red [x] in corner
-      
-      //basically calls displayNoSaveExit() when pressing red [x] in corner
-//      mainStage.setOnCloseRequest(event -> {
-//        System.out.println("displayNoSaveExit()"); // debug message
-//        Stage noSaveExitWindow = new Stage(); // make new window
-//        noSaveExitWindow.initModality(Modality.WINDOW_MODAL); // lock user to new window
-//        noSaveExitWindow.initOwner(mainStage);
-//        NoSaveAndQuit noSave = new NoSaveAndQuit(); // save without quitting instance
-//        try {
-//          noSave.start(noSaveExitWindow); // open new window
-//        } catch (Exception e) {
-//          System.out.println(e.getMessage());
-//        }
-//      });
-      
-//      Platform.setImplicitExit(false);
-      
-      
-      
-      
 
-//      primaryStage.setOnCloseRequest(this::stop);
       
-//      primaryStage.setOnCloseRequest(WindowEvent::consume);
-      
-//      primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {  
-//        @Override
-//        public void handle(WindowEvent event) {
-//            AlertHelper addMore = new AlertHelper("Exit application? Any unsaved data will be lost", "Attention", "Confirmation Required");
-//            boolean actionNeeded = addMore.populatePopup();
-//            if (actionNeeded) {
-//                System.exit(0);
-//            } else {
-//                event.consume();
-//            }
-//
-//        }
-//    });
-      
+    //basically calls displayNoSaveExit() when pressing red [x] in corner
+      primaryStage.setOnCloseRequest(event -> { // calls on closing program
+        event.consume(); // stops them from cancelling
+        Stage noSaveExitWindow = new Stage(); // make new window
+        noSaveExitWindow.initModality(Modality.WINDOW_MODAL); // lock user to new window
+        noSaveExitWindow.initOwner(mainStage);
+        NoSaveAndQuit noSave = new NoSaveAndQuit(); // save without quitting instance
+        try {
+          noSave.start(noSaveExitWindow); // open new window
+        } catch (Exception e) {
+          System.out.println(e.getMessage());
+        }
+        
+      });
       
     }catch(Exception e) {
       System.out.println(e.getMessage());
     }
   }
-  
-//  private void stop(WindowEvent event) {
-//    event.consume();
-//  }
   
   /**
    * Load questions from a chosen (with file chooser) json file when the loadQuestionsButton is pressed,
@@ -372,7 +343,7 @@ public class Main extends Application{
       
     } else { // if it exists and has at least one question, open test window
       int numQs = Math.min(this.topicQuestionBank.questions.size(), this.numQuizQuestions); // gets the smaller of user-entered number and available quiz questions in topicQuestionBank
-      this.quizQuestionBank = this.topicQuestionBank.getQuizQuestionBank(numQs);   
+      this.quizQuestionBank = this.topicQuestionBank.getQuizQuestionBank(numQs);
       Stage quizWindow = new Stage();
       firstQuestion = quizWindow;
       QuestionScene quiz = new QuestionScene(this.quizQuestionBank, 0, new QuizResult()); // 0 is the starting question number
