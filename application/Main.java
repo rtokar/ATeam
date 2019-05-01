@@ -1,4 +1,5 @@
 package application;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,8 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+//other notes: display trueness of answer when making question
+
 /**
  * This is the main driver for the quiz generator.
  * @author jthalacker, ascherer
@@ -30,7 +33,7 @@ import javafx.stage.Stage;
  */
 public class Main extends Application{
   
-  protected QuestionBank masterQuestionBank; // bank of questions from all loaded json files
+  protected static QuestionBank masterQuestionBank; // bank of questions from all loaded json files
   protected QuestionBank topicQuestionBank; // all questions with topic matching selected topics
   protected QuestionBank quizQuestionBank; // a subset of randomized questions from selected topics, 
                                            // number equal to numQuizQuestions (or num of qs in topicQuestionBank, whichever is lower)
@@ -40,19 +43,27 @@ public class Main extends Application{
   protected int numQuizQuestions; // num entered in the TextField numQuestionsTextField
   protected String selectedTopic; // topic currently selected with the loadedTopicsComboBox
   
-  private Stage mainStage;
+  private static Stage mainStage;
   
   private ObservableList<String> comboBoxList = FXCollections.observableArrayList(this.topicList); // ComboBox must be a field in order to be properly updated when new topics are added
   private ComboBox<String> loadedTopicsComboBox = new ComboBox<String>(comboBoxList);
   
   private ListView<String> chosenTopicsListView = new ListView<String>(); // displays chosen topics, a field for updating purposes
+  private int numTopicQuestions = 0; // for display label above curentTopics display, will update as more topics are added
+  private int numTotalQuestions = 0; // for display label above currentTopics display, updates as more questions are loaded to masterQuestionBank
+  private Label numOfTopicQuestionsLabel = new Label("("+this.numTopicQuestions+" topic questions) / ("+this.numTotalQuestions+" total questions)"); // displays number of topic questions, updates when new topic is added to list of current topics
+  
+  protected static Boolean closeFlag = false; // quit windows can set this flag to true to close this main window after they close
+                                                                                                
+  
+  
 
   /**
    * Primary driver of the application, creates main GUI from which all functions and other GUIS stem from.
    */
   public void start(Stage primaryStage) {
     try {
-      this.mainStage = primaryStage;
+      mainStage = primaryStage;
       
       //Create main window
       HBox root = new HBox(30);
@@ -88,19 +99,23 @@ public class Main extends Application{
       Button clearTopicListButton = new Button("Clear Topic List");
       
       Label chosenTopicListLabel = new Label("Chosen Topics:");
+       // TODO: may need to make this a field too so we can update it as topics are added
+      VBox topicLabels = new VBox(5);
+      topicLabels.getChildren().addAll(numOfTopicQuestionsLabel, chosenTopicListLabel);
       
       chosenTopicsListView.setMaxSize(175, 100);
       Button dontSaveAndQuitButton = new Button("Quit Without Saving");
       
       //vbox and hbox creation/updates
+      
       addAndClear.getChildren().addAll(addTopicButton, clearTopicListButton);
       vBox1.getChildren().addAll(makeQuestionButton, loadQuestionsButton, takeTestButton, saveAndQuitButton);
       vBox2.getChildren().addAll(numQuestionsTextField, loadedTopicsComboBox, 
-          addAndClear, chosenTopicListLabel, chosenTopicsListView, dontSaveAndQuitButton);
+          addAndClear, topicLabels, chosenTopicsListView, dontSaveAndQuitButton);
       root.getChildren().addAll(vBox1, vBox2);
       
       //Create scene and update stage
-      Scene scene = new Scene(root,375,350);
+      Scene scene = new Scene(root,415,350);
       primaryStage.setScene(scene);
       primaryStage.setTitle("Quiz Generator");
       primaryStage.show();
@@ -120,6 +135,8 @@ public class Main extends Application{
       clearTopicListButton.setOnAction(this::clearTopicList);
       numQuestionsTextField.setOnAction(this::getNumQuestions);
       loadedTopicsComboBox.setOnAction((event) -> this.selectedTopic = ((ComboBoxBase<String>) event.getSource()).getValue()); // sets the selected topic when a topic is selected
+      //mainStage.setOnCloseRequest(this::displayNoSaveExit);  // attempt to make NoSaveAndQuit happen when pressing red [x] in corner
+      
       
     }catch(Exception e) {
       System.out.println(e.getMessage());
@@ -147,6 +164,9 @@ public class Main extends Application{
       //this.updateTopicList();
       this.topicList.add("blarg"); this.topicList.add("blarg2");
       this.loadedTopicsComboBox.setItems(FXCollections.observableArrayList(this.topicList)); // update topic list after loading new questions from file
+      //this.numTotalQuestions = masterQuestionBank.questions.size();
+      this.numTotalQuestions = 23;
+      this.numOfTopicQuestionsLabel.setText("("+this.numTopicQuestions+" topic questions) / ("+this.numTotalQuestions+" total questions)");
     }
 
     System.out.println("loadQuestions()");
@@ -188,7 +208,10 @@ public class Main extends Application{
     System.out.println("addTopic()");
     System.out.println("currentTopics: "+this.currentTopics);
     this.chosenTopicsListView.setItems(FXCollections.observableArrayList(this.currentTopics)); // update visible list with added topic
-    this.topicQuestionBank = this.masterQuestionBank.filterQuestions(this.currentTopics); // create the topicQuestionBank as a filtered masterQuestionBank TODO: check if Clarence is overloading filterQuestions()
+    //this.topicQuestionBank = masterQuestionBank.filterQuestions(this.currentTopics); // create the topicQuestionBank as a filtered masterQuestionBank TODO: check if Clarence is overloading filterQuestions()
+    //this.numTopicQuestions = this.topicQuestionBank.questions.size();
+    this.numTopicQuestions = 5;
+    this.numOfTopicQuestionsLabel.setText("("+this.numTopicQuestions+" topic questions) / ("+this.numTotalQuestions+" total questions)");
   }
   
   /**
@@ -198,24 +221,28 @@ public class Main extends Application{
   private void clearTopicList(ActionEvent event) {
     this.currentTopics = new ArrayList<String>(); // reset currentTopics with a blank ArrayList
     this.chosenTopicsListView.setItems(FXCollections.observableArrayList(this.currentTopics)); // update visible list
+    this.topicQuestionBank = null; //TODO: check that resetting topicQuestionBank like this when clearing topics doesnt break anything
+    this.numTopicQuestions = 0;
+    this.numOfTopicQuestionsLabel.setText("("+this.numTopicQuestions+" topic questions) / ("+this.numTotalQuestions+" total questions)");
     System.out.println("clearTopicList()");
   }
   
   /**
    * Displays the MakeQuestion screen when makeQuestionButton is pressed.
-   *  (call from Jake's class? I forget if I am making this or he is)
    */
   private void displayMakeQuestion(ActionEvent event) {
     System.out.println("displayMakeQuestion()");
     Stage makeQuestionWindow = new Stage(); // make new window
     makeQuestionWindow.initModality(Modality.WINDOW_MODAL); // lock user to new window
-    makeQuestionWindow.initOwner(this.mainStage);
+    makeQuestionWindow.initOwner(mainStage);
     MakeQuestionScene mqs = new MakeQuestionScene();
     try {
       mqs.start(makeQuestionWindow);
     } catch (Exception e) {
       System.out.println(e.getMessage());
     }
+    // when questions are done being made, update the # of total questions label
+    this.updateNumOfQuestionsLabel();
   }
   
   /**
@@ -224,14 +251,31 @@ public class Main extends Application{
    */
   private void displaySaveExit(ActionEvent event) {
     System.out.println("displaySaveExit()");
-    Stage saveExitWindow = new Stage(); // make new window
-    saveExitWindow.initModality(Modality.WINDOW_MODAL); // lock user to new window
-    saveExitWindow.initOwner(this.mainStage);
-    SaveAndQuit save = new SaveAndQuit();
-    try {
-      save.start(saveExitWindow); // open new window
-    } catch (Exception e) {
-      System.out.println(e.getMessage());
+//    Stage saveExitWindow = new Stage(); // make new window
+//    saveExitWindow.initModality(Modality.WINDOW_MODAL); // lock user to new window
+//    saveExitWindow.initOwner(mainStage);
+//    SaveAndQuit save = new SaveAndQuit();
+//    try {
+//      save.start(saveExitWindow); // open new window
+//    } catch (Exception e) {
+//      System.out.println(e.getMessage());
+//    }
+    
+    // pull up file chooser to select save .json file, cancel will cancel the quitting process
+    Stage chooseStage = new Stage(); // new window for file chooser
+    chooseStage.initOwner(mainStage); // set main stage as owner
+    chooseStage.initModality(Modality.WINDOW_MODAL); // lock focus to file chooser
+    FileChooser choose = new FileChooser();
+    choose.setTitle("Choose a .json file to load questions");
+    FileChooser.ExtensionFilter filt = new FileChooser.ExtensionFilter(".json", "*.json"); // only allow .json files
+    choose.getExtensionFilters().add(filt);
+    File initDirectory = new File("..");// set inital directory for searching as parent directory of this file
+    choose.setInitialDirectory(initDirectory);
+    File jsonFile = choose.showSaveDialog(chooseStage); // launch file choosing dialog box
+    
+    if (jsonFile != null) { // if a file was chosen
+      this.save(jsonFile); // save the masterQuestionBank in it
+      kill(); // close main GUI
     }
   }
   
@@ -243,9 +287,8 @@ public class Main extends Application{
     System.out.println("displayNoSaveExit()"); // debug message
     Stage noSaveExitWindow = new Stage(); // make new window
     noSaveExitWindow.initModality(Modality.WINDOW_MODAL); // lock user to new window
-    noSaveExitWindow.initOwner(this.mainStage);
+    noSaveExitWindow.initOwner(mainStage);
     NoSaveAndQuit noSave = new NoSaveAndQuit(); // save without quitting instance
-    
     try {
       noSave.start(noSaveExitWindow); // open new window
     } catch (Exception e) {
@@ -279,7 +322,7 @@ public class Main extends Application{
       Stage quizWindow = new Stage();
       QuestionScene quiz = new QuestionScene(quizQuestionBank, 0); // 0 is the starting question number
       quizWindow.initModality(Modality.WINDOW_MODAL); // lock user to new window
-      quizWindow.initOwner(this.mainStage);
+      quizWindow.initOwner(mainStage);
       try {
         quiz.start(quizWindow);
         System.out.println("displayQuiz()");
@@ -299,7 +342,7 @@ public class Main extends Application{
       this.topicList = new ArrayList<String>();
     }
     // search through masterQuestionBank, update the list of all topics (no duplicate listings). create the list if it is currently null
-    for (Question q : this.masterQuestionBank.questions) {
+    for (Question q : masterQuestionBank.questions) {
       if (!this.topicList.contains(q.getQuestionTopic())) { // if topicList doesnt already have topic, add it
         this.topicList.add(q.getQuestionTopic());
       }
@@ -307,6 +350,32 @@ public class Main extends Application{
     this.loadedTopicsComboBox.setItems(FXCollections.observableArrayList(this.topicList)); // update topic list in combobox
   }
 
+  /**
+   * Call this whenever you want to update the label showing the total number of questions in masterQuestionBank
+   * and the number of questions matching the topics selected.
+   */
+  private void updateNumOfQuestionsLabel() {
+    this.numTotalQuestions = masterQuestionBank.questions.size();
+    if (this.topicQuestionBank != null)
+      this.numTopicQuestions = this.topicQuestionBank.questions.size();
+    this.numOfTopicQuestionsLabel.setText("("+this.numTopicQuestions+" topic questions) / ("+this.numTotalQuestions+" total questions)");
+  }
+  
+  /**
+   * Saves the masterQuestionBank to the selected json file.
+   * @parameter jsonFile is the file in which we will save the contents of masterQuestionBank
+   */
+  private void save(File jsonFile) {
+    // save the question objects of masterQuestionBank in the provided json file
+  }
+  
+  /**
+   * Closes the main GUI window, mainly called from NoSaveAndQuit window.
+   */
+  protected static void kill() {
+    mainStage.close();
+  }
+  
   public static void main(String[] args) {
     Application.launch(args);
   }
