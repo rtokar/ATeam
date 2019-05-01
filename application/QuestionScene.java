@@ -13,6 +13,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -40,6 +41,7 @@ public class QuestionScene extends Application {
 	File image;
 
 	Answer chosenAnswer;
+	ToggleGroup group;
 	Stage mainStage;
 
 	QuestionScene(QuestionBank currQuestions, int questionNumber, QuizResult quizResult){
@@ -78,8 +80,10 @@ public class QuestionScene extends Application {
 			questionText.setWrapText(true);
 
 			//Create the radio buttons with the answer values for the questions
+			group = new ToggleGroup();
 			for(int i = 0; i < answers.size(); i++) {
 				answerButtons.add(new RadioButton(answers.get(i).getAnswerText()));
+				answerButtons.get(i).setToggleGroup(group);
 			}
 
 			//Add UI Objects to vBox1
@@ -107,7 +111,8 @@ public class QuestionScene extends Application {
 			mainStage.setScene(scene);
 			mainStage.setTitle("Question Scene");
 			mainStage.show();
-
+			
+			//Set the actions for the two buttons
 			exitQuizButton.setOnAction(this::backToMain);
 			submitButton.setOnAction(this::callPopBox);
 
@@ -131,8 +136,8 @@ public class QuestionScene extends Application {
 	 */
 	private void updateQuizResults (Boolean correct) {
 		if(correct)
-			results.setNumCorrect();//TODO tell rose to increment rather then set
-		results.setNumAnswered();//TODO tell rose to increment rather then 
+			results.incNumCorrect();//TODO tell rose to increment rather then set
+		results.incNumAnswered();//TODO tell rose to increment rather then 
 		return;
 	}
 	/**
@@ -141,6 +146,11 @@ public class QuestionScene extends Application {
 	 * When it calls a new QuestionScene, it must pass currTopics
 	 */
 	private void callPopBox(ActionEvent event) {
+		for(int i=0; i < answerButtons.size(); i++) {
+			if(answerButtons.get(i).isSelected())
+				chosenAnswer = question.getAnswersList().get(i);
+		}
+		
 		//update the results
 		updateQuizResults(chosenAnswer.getCorrectenss());
 		//If last question, display quiz results
