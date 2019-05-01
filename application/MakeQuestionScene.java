@@ -107,7 +107,7 @@ public class MakeQuestionScene extends Application {
 		      TextField topicField = new TextField();
 		     
 		     
-		      //Image getter
+		      //Image getter here
 		      TextField imagePath = new TextField();
 		      imagePickButton.setOnAction(event -> {
 		    	  FileChooser fileChooser = new FileChooser();
