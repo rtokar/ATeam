@@ -210,12 +210,14 @@ public class MakeQuestionScene extends Application {
 					//Makes Question if image is null
 					if (image == null) {
 						Question newQuestion = new Question(questionTopic, questionText, answerListObject, metaData);
-						Main.masterQuestionBank.addQuestion(newQuestion);
+						Main.addToMasterQuestionBank(newQuestion);
+						
 						//Makes Question if image is not null
 					} else {
 						Question newQuestion = new Question(questionTopic, questionText, answerListObject, metaData,
 							image);
-						Main.masterQuestionBank.addQuestion(newQuestion);
+						//Main.masterQuestionBank.addQuestion(newQuestion);
+					    Main.addToMasterQuestionBank(newQuestion);
 					}
 					return true;
 				}
