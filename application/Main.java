@@ -189,6 +189,7 @@ public class Main extends Application{
         System.out.println("io exception");
       } catch (ParseException e) {
         System.out.println("parse exception");
+        System.out.println(e.getMessage());
       } catch (Exception e) {
         System.out.println("an exception was thrown while adding questions");
         System.out.println(e.getMessage());
@@ -302,7 +303,7 @@ public class Main extends Application{
     File jsonFile = choose.showSaveDialog(chooseStage); // launch file choosing dialog box
     
     if (jsonFile != null) { // if a file was chosen
-      this.save2(jsonFile); // save the masterQuestionBank in it
+      this.save(jsonFile); // save the masterQuestionBank in it
       kill(); // close main GUI
     }
   }
@@ -415,28 +416,53 @@ public class Main extends Application{
    */
   @SuppressWarnings("unchecked")
   private void save(File jsonFile) {
-    // save the question objects of masterQuestionBank in the provided json file
-    JSONObject jobj = new JSONObject();
-    JSONArray qlist = new JSONArray();
-    JSONArray meta = new JSONArray();
-    meta.add("this is the meta");
-    qlist.add(meta);
-    jobj.put("qlist", qlist);
     
-    try {
+    JSONObject wholeThang = new JSONObject(); // put "question array" in here
+    JSONArray questions = new JSONArray(); // add all question s to this
+    
+    // loop through questions
+    for (int q_i = 0; q_i < masterQuestionBank.questions.size(); q_i ++) {
+      Question bankQuestion = masterQuestionBank.questions.get(q_i);
+      JSONObject question = new JSONObject();
+      question.put("meta-data", bankQuestion.getMetadata()); 
+      question.put("questionText", bankQuestion.getQuestionText());
+      question.put("topic", bankQuestion.getQuestionTopic());
+      File imageFile = bankQuestion.getImage();
+      String image = "";
+      if (imageFile == null)
+        image += "none";
+      else
+        image += imageFile.toString();
+      question.put("image", image);
+      JSONArray answers = new JSONArray();
+      // loop through answers
+      for (int a_i = 0; a_i < bankQuestion.getAnswersList().size(); a_i++) {
+        Answer bankAnswer = bankQuestion.getAnswersList().get(a_i);
+        JSONObject answer = new JSONObject();
+        String trueness = "";
+        if (bankAnswer.getCorrectness())
+          trueness += "T";
+        else
+          trueness += "F";
+        answer.put("isCorrect", trueness);
+        answer.put("choice", bankAnswer.getAnswerText());
+        answers.add(answer);
+      }
+      // put everything together
+      question.put("choiceArray", answers);
+      questions.add(question);
+      wholeThang.put("questionArray", questions);
+    }
+    
+    try { // write json to file
       FileWriter file = new FileWriter(jsonFile);
-      file.write(jobj.toJSONString());
+      file.write(wholeThang.toJSONString());
       file.close();
       System.out.println("saved");
     } catch (Exception e) {
       System.out.println(e.getMessage());
     }
-    
-//    for (Question question : masterQuestionBank.questions) {
-//      JSONArray meta = new JSONArray();
-//      meta.add(""+question.getMetadata());
-//      qlist.add(meta);
-//      jobj.put("outside",qlist); 
+
   }
   
   /**
@@ -445,45 +471,54 @@ public class Main extends Application{
    */
   private void save2(File jsonFile) {
     String fileString = "";
-    fileString += "{\n\t\"questionArray\":\n\t[\n\t\t{"; // this brings us to the "meta-data" part of the json file
+    fileString += "{\n\t\"questionArray\": \n\t[\n\t"; // this brings us to the "meta-data" part of the json file
+    int iter = 0;
     for (Question q : masterQuestionBank.questions) {
-      fileString += "\"meta-data\":\""+ q.getMetadata() +"\",\n\t\t\t";
-      fileString += "\"questionText\":\""+ q.getQuestionText() +"\",\n\t\t\t";
-      fileString += "\"topic\":\""+ q.getQuestionTopic() +"\",\n\t\t\t";
-      fileString += "\"image\":\""+ q.getImage() +"\",\n\t\t\t";
-      fileString += "\"choiceArray\":\n\t\t\t";
-      fileString += "[\n\t\t\t";
+      // get correct image notation (null = none)
+      String imageText = "";
+      if (q.getImage() == null)
+        imageText += "none";
+      else
+        imageText += q.getImage();
+        
+      fileString += "    {\n\t        ";
+      fileString += "\"meta-data\":\""+ q.getMetadata() +"\",\n\t\t";
+      fileString += "\"questionText\": \""+ q.getQuestionText() +"\",\n\t        ";
+      fileString += "\"topic\": \""+ q.getQuestionTopic() +"\",\n\t        ";
+      fileString += "\"image\":\""+ imageText +"\",\n\t        ";
+      fileString += "\"choiceArray\":\n\t        ";
+      fileString += "[\n\t        ";
       
+      int iter2 = 0;
       for (Answer a : q.getAnswersList()) {
+        // set trueness string
+        String trueness = "";
+        if (a.getCorrectness())
+          trueness += "T";
+        else
+          trueness += "F";
       //choice loop here
-        fileString += "\t{\"isCorrect\":\"" + a.getCorrectness() + "\",\"choice\":" + a.getAnswerText() + "\"}"; // TODO: last comma here wont be there for last choice, figure that out
+        fileString += "\t{\"isCorrect\":\"" + trueness + "\",\"choice\":" + a.getAnswerText() + "\"}"; // TODO: last comma here wont be there for last choice, figure that out
         // check for final answer, if so then dont add comma
-//        if (!q.getAnswersList()) {
-//          
-//        }
-        fileString += "\n\t\t\t]";
+        if (iter2 < q.getAnswersList().size() - 1) {
+          fileString += ",";
+        }
+        iter2 ++;
+        fileString += "\n\t        ";
       }
+      fileString += "]";
+      fileString += "\n\t    }";
+      // check for final question, dont add comma if at last questions
+      if (iter < masterQuestionBank.questions.size()-1)
+        fileString += ",";
+      iter ++;
+      fileString += "\n\t";
     }
-    
-//    //question loop here
-//    fileString += "\"meta-data\":\""+ "metadata call here" +"\",\n\t\t\t";
-//    fileString += "\"questionText\":\""+ "questionText call here" +"\",\n\t\t\t";
-//    fileString += "\"topic\":\""+ "topic call here" +"\",\n\t\t\t";
-//    fileString += "\"image\":\""+ "image call here" +"\",\n\t\t\t";
-//    fileString += "\"choiceArray\":\n\t\t\t";
-//    fileString += "[\n\t\t\t";
-    
-    //choice loop here
-    fileString += "\t{\"isCorrect\":\"" + "question.true?" + "\",\"choice\":" + "\"questionChoice" + "\"},"; // TODO: last comma here wont be there for last choice, figure that out
-    fileString += "\n\t\t\t]";
-    
-    //close choiceArray curly bracket
-    fileString += "\n\t\t},"; // TODO: only put comma here if there are other questions left (no comma on last question)
-    
+
     //close questionArray bracket
-    fileString += "\n\t]";
+    fileString += "]";
     //close whole file curly bracket
-    fileString += "\n}";
+    fileString += "\n}\n";
     //
     try {
       FileWriter file = new FileWriter(jsonFile);
@@ -491,10 +526,7 @@ public class Main extends Application{
       file.close();
     } catch (Exception e) {
       System.out.println(e.getMessage());
-    }
-    
-        
-    
+    }   
   }
   
   /**
