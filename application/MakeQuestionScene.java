@@ -142,7 +142,7 @@ public class MakeQuestionScene extends Application {
 			TextField imagePath = new TextField();
 			imagePickButton.setOnAction(event -> {
 				FileChooser fileChooser = new FileChooser();
-				fileChooser.setTitle("Open Resource File");
+				fileChooser.setTitle("Open Resource File"); 
 				// Image files only allowed
 				fileChooser.getExtensionFilters().addAll(new ExtensionFilter(" Files", "*.png", "*.jpg", "*.gif"));
 				image = fileChooser.showOpenDialog(primaryStage);
