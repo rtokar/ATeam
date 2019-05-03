@@ -108,7 +108,6 @@ public class QuestionScene extends Application {
 
 			//vBox2 Objects
 			//Create image for question
-
 			ImageView questionImage = new ImageView();
 			Image qImage; 
 			if(image != null && image.getPath() != null) {
