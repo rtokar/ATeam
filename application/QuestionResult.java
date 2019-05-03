@@ -7,7 +7,6 @@ import javafx.event.ActionEvent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -18,24 +17,36 @@ import javafx.stage.Stage;
  *
  */
 public class QuestionResult extends Application{
-	Boolean correct;
-	Stage mainStage = new Stage();
-	QuestionBank currQuestions;
-	int questionNumber;
-	QuizResult results;
+	Boolean correct; //whether the answer was correct or not
+	Stage mainStage = new Stage(); //the main Stage for the GUI
+	QuestionBank currQuestions; //List of questions for quiz
+	int questionNumber; //Current question
+	QuizResult results; //the quiz results
 
-	public QuestionResult(Boolean correct, QuestionBank currQuestions, int questionNumber, QuizResult results) {
+	/**
+	 * this is the constructor that assigns all the variables the correct values passed in
+	 * @param correct correctness 
+	 * @param currQuestions questions in quiz
+	 * @param questionNumber current question number
+	 * @param results QuizResults
+	 */
+	public QuestionResult(Boolean correct, QuestionBank currQuestions, int questionNumber,
+			QuizResult results) {
 		this.correct = correct;
 		this.currQuestions = currQuestions;
 		this.questionNumber = questionNumber;
 		this.results = results;
 	}
 
-
+	/**
+	 * this is the method that will display the GUI and cause an event when next is clicked
+	 * @param primaryStage, the stage for the GUI
+	 */
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		try {
 			mainStage = primaryStage;
+			//Create the vBoxes
 			VBox root = new VBox(30);
 			VBox bottom = new VBox(15);
 			//Create Next Button
@@ -48,29 +59,32 @@ public class QuestionResult extends Application{
 			else
 				correctness.setText("Incorrect!");
 
-
+			//Create Scene and display GUI on screen
 			bottom.getChildren().addAll(correctness, nextButton);
 			root.getChildren().add(bottom);
 			Scene scene = new Scene(root,375,350);
 			mainStage.setScene(scene);
 			mainStage.setTitle("QuestionResult");
 			mainStage.show();
-
-
-			//TODO call new questionScene from next button
+			
+			//Set action of the nextButton
 			nextButton.setOnAction(this::displayNextQuestionScene);
 
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
 	}
+	/**
+	 * This displays the next questions Scene
+	 * @param event, the event that triggers it.(clicking nextButton)
+	 */
 	public void displayNextQuestionScene(ActionEvent event) {
 		Stage quizWindow = new Stage();
-		QuestionScene quiz = new QuestionScene(currQuestions, questionNumber+1, results); // 0 is start
+		QuestionScene quiz = new QuestionScene(currQuestions, questionNumber+1, results); //0-start
 		quizWindow.initModality(Modality.WINDOW_MODAL); // lock user to new window 
 		quizWindow.initOwner(this.mainStage);
 		try {
-			quiz.start(quizWindow);
+			quiz.start(quizWindow); //call the quiz again
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}

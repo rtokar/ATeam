@@ -1,5 +1,4 @@
 package application;
-import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -7,11 +6,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -19,7 +16,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ComboBoxBase;
 import javafx.scene.control.Label;
-import javafx.scene.control.Labeled;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
@@ -180,16 +176,16 @@ public class Main extends Application{
     if (jsonFile != null) {
       try {
       masterQuestionBank.addAllQuestions(jsonFile); // adds all questions from the chosen json file
-      System.out.println("added questions from file");
+
       } catch (FileNotFoundException e) {
-        System.out.println("filenotfound exception");
+
       } catch (IOException e) {
-        System.out.println("io exception");
+
       } catch (ParseException e) {
-        System.out.println("parse exception");
+
         System.out.println(e.getMessage());
       } catch (Exception e) {
-        System.out.println("an exception was thrown while adding questions");
+
         System.out.println(e.getMessage());
       }
       this.updateTopicList();
@@ -197,9 +193,6 @@ public class Main extends Application{
       this.numTotalQuestions = masterQuestionBank.questions.size();
       this.numOfTopicQuestionsLabel.setText("("+this.numTopicQuestions+" topic questions) / ("+this.numTotalQuestions+" total questions)");
     }
-
-    System.out.println("loadQuestions()");
-    System.out.println("Selected File: "+jsonFile);
   }
   
   /**
@@ -207,7 +200,7 @@ public class Main extends Application{
    * saves the currently entered int as the number of quiz questions wanted in the quiz
    */
   private void getNumQuestions(ActionEvent event) {
-    System.out.println("pressed enter");
+
     try {
       int n = Integer.parseInt(((TextField) event.getSource()).getText());
       if (n < 1)
@@ -220,8 +213,7 @@ public class Main extends Application{
       alert.setHeaderText(null);
       alert.setContentText("A non-integer was entered!\n\nPlease type a positive integer in this field and press the \"Enter\" key.");
       alert.showAndWait();
-      
-      System.out.println("no int!");
+
     } catch (Exception e) {
       
       Alert alert = new Alert(AlertType.ERROR);
@@ -240,12 +232,11 @@ public class Main extends Application{
     if (this.currentTopics == null) { // if currentTopics hasnt been initialized yet, do it
       this.currentTopics = new ArrayList<String>();
     }
-    System.out.println("selectedTopic: "+this.selectedTopic);
+
     if (this.selectedTopic != null && !this.currentTopics.contains(this.selectedTopic)) { // add selectedTopic to currentTopics if it isnt null and not already there
       this.currentTopics.add(this.selectedTopic);
     }
-    System.out.println("addTopic()");
-    System.out.println("currentTopics: "+this.currentTopics);
+
     this.chosenTopicsListView.setItems(FXCollections.observableArrayList(this.currentTopics)); // update visible list with added topic
     this.topicQuestionBank = masterQuestionBank.filterQuestions(this.currentTopics); // create the topicQuestionBank as a filtered masterQuestionBank
 
@@ -295,7 +286,7 @@ public class Main extends Application{
     FileChooser choose = new FileChooser();
     choose.setTitle("Choose a .json file to load questions");
     FileChooser.ExtensionFilter filt = new FileChooser.ExtensionFilter(".json", "*.json"); // only allow .json files
-    choose.getExtensionFilters().add(filt); // TODO: .json files are still greyed out when selecting
+    choose.getExtensionFilters().add(filt);
     File initDirectory = new File("..");// set inital directory for searching as parent directory of this file
     choose.setInitialDirectory(initDirectory);
     File jsonFile = choose.showSaveDialog(chooseStage); // launch file choosing dialog box
@@ -331,7 +322,7 @@ public class Main extends Application{
     try {
       int numQs = Math.min(this.topicQuestionBank.questions.size(), this.numQuizQuestions);
       this.quizQuestionBank = this.topicQuestionBank.getQuizQuestionBank(numQs);
-      System.out.println("numQs: "+numQs);
+
     } catch (Exception e) {
         // do nothing
     }
@@ -456,7 +447,7 @@ public class Main extends Application{
       FileWriter file = new FileWriter(jsonFile);
       file.write(wholeThang.toJSONString());
       file.close();
-      System.out.println("saved");
+
     } catch (Exception e) {
       System.out.println(e.getMessage());
     }
