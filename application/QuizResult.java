@@ -23,7 +23,7 @@ public class QuizResult {
 		numAnswered = 0;
 	}
 	
-	// numCorrect incrementer
+	// numCorrect incrementer 
 	public void incNumCorrect() {
 		this.numCorrect++;
 	}
