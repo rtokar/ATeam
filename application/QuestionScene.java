@@ -37,7 +37,7 @@ public class QuestionScene extends Application {
 	int questionNumber;  //current question displayed
 	QuizResult results;
 
-	//File for image needed publically
+	//File for image needed publicly
 	File image; //the image file
 
 	Answer chosenAnswer; //the answer the user chooses
