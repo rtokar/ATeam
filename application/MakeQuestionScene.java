@@ -144,7 +144,7 @@ public class MakeQuestionScene extends Application {
 				FileChooser fileChooser = new FileChooser();
 				fileChooser.setTitle("Open Resource File");
 				// Image files only allowed
-				fileChooser.getExtensionFilters().addAll(new ExtensionFilter("Image Files", "*.png", "*.jpg"));
+				fileChooser.getExtensionFilters().addAll(new ExtensionFilter(" Files", "*.png", "*.jpg", "*.gif"));
 				image = fileChooser.showOpenDialog(primaryStage);
 				if (image != null) {
 					imagePath.setText(image.getPath());
