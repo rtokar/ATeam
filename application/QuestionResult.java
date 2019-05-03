@@ -17,7 +17,7 @@ import javafx.stage.Stage;
  *
  */
 public class QuestionResult extends Application{
-	Boolean correct; //wether the answer was correct or not
+	Boolean correct; //whether the answer was correct or not
 	Stage mainStage = new Stage(); //the main Stage for the GUI
 	QuestionBank currQuestions; //List of questions for quiz
 	int questionNumber; //Current question
@@ -25,10 +25,10 @@ public class QuestionResult extends Application{
 
 	/**
 	 * this is the constructor that assigns all the variables the correct values passed in
-	 * @param correct
-	 * @param currQuestions
-	 * @param questionNumber
-	 * @param results
+	 * @param correct correctness 
+	 * @param currQuestions questions in quiz
+	 * @param questionNumber current question number
+	 * @param results QuizResults
 	 */
 	public QuestionResult(Boolean correct, QuestionBank currQuestions, int questionNumber,
 			QuizResult results) {
@@ -38,11 +38,15 @@ public class QuestionResult extends Application{
 		this.results = results;
 	}
 
-
+	/**
+	 * this is the method that will display the GUI and cause an event when next is clicked
+	 * @param primaryStage, the stage for the GUI
+	 */
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		try {
 			mainStage = primaryStage;
+			//Create the vBoxes
 			VBox root = new VBox(30);
 			VBox bottom = new VBox(15);
 			//Create Next Button
@@ -76,11 +80,11 @@ public class QuestionResult extends Application{
 	 */
 	public void displayNextQuestionScene(ActionEvent event) {
 		Stage quizWindow = new Stage();
-		QuestionScene quiz = new QuestionScene(currQuestions, questionNumber+1, results); // 0 is start
+		QuestionScene quiz = new QuestionScene(currQuestions, questionNumber+1, results); //0-start
 		quizWindow.initModality(Modality.WINDOW_MODAL); // lock user to new window 
 		quizWindow.initOwner(this.mainStage);
 		try {
-			quiz.start(quizWindow);
+			quiz.start(quizWindow); //call the quiz again
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
