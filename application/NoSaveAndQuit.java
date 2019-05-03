@@ -16,6 +16,11 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+/**
+ * This class is called from main when the user tries to quit without saving.
+ * @author ascherer
+ *
+ */
 public class NoSaveAndQuit extends Application {
 
   @Override
