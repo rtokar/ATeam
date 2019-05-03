@@ -78,7 +78,7 @@ public class Main extends Application{
       //Create main window
       HBox root = new HBox(30);
       //Create two sides
-      VBox vBox1 = new VBox(51);
+      VBox vBox1 = new VBox(58);
       VBox vBox2 = new VBox(7);
       //vBox2's hBoxes
       HBox addAndClear = new HBox(5);
