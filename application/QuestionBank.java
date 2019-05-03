@@ -17,28 +17,31 @@ import org.json.simple.parser.*;
 public class QuestionBank {
 	List<Question> questions = new ArrayList<Question>();
 	List<String> fileTracker = new ArrayList<String>();
-	private boolean debug = true;
+	
+	// constructor: init an empty instance if no input present.
 	public QuestionBank() {
 	}
+	// constructor: init an QuestionBank instance with provided jsonFile.
 	public QuestionBank(File jsonFilePath) throws FileNotFoundException, IOException, ParseException {
 		questions = readJson(jsonFilePath);
 	}
-	protected QuestionBank filterQuestions(String indicatedTopic) {
-		List<Question> topicQuestionList = new ArrayList<Question>();
-		for(Question q: questions) {
-			if (q.getQuestionTopic().equals(indicatedTopic)) {
-				topicQuestionList.add(q);
-			}
-		}
-		QuestionBank filteredBank = new QuestionBank();
-		for(int i = 0; i< topicQuestionList.size();i++) {
-			filteredBank.addQuestion(topicQuestionList.get(i));
-		}
-		return filteredBank;
-	}
+	
+	/**
+	 * function name: addQuestion
+	 * discription: : add question to QuestionBank(i.e. quesitons).
+	 * @param question: new question to be added.
+	 * 
+	 */
 	protected void addQuestion(Question question) {
 		questions.add(question);
 	}
+	
+	/**
+	 * function name: getQuizQuestionBank
+	 * discription: generate a QuestionBank instance with random selected questions.
+	 * @param numQ
+	 * @return
+	 */
 	protected QuestionBank getQuizQuestionBank(int numQ) {
 		QuestionBank QuizQuestionBank = new QuestionBank();
 		Random rd = new Random();
@@ -59,6 +62,12 @@ public class QuestionBank {
 		return QuizQuestionBank;
 	}
 	
+	/**
+	 * function name: filterQuestions
+	 * discription: filter the QuestionBank with provided topics.
+	 * @param indicatedTopic: quesitons with topics not included in indicatedTopic will be filtered.
+	 * @return QuestionBank contained only questions from selected topic(s).
+	 */
 	protected QuestionBank filterQuestions(List<String> indicatedTopic) {
 		List<Question> topicQuestionList = new ArrayList<Question>();
 		for(String topic:indicatedTopic) {
@@ -74,6 +83,15 @@ public class QuestionBank {
 		}
 		return filteredBank;
 	}
+	
+	/**
+	 * function name: addAllQuestions
+	 * discription: add all questions provided in the given json file.
+	 * @param jsonFile
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 * @throws ParseException
+	 */
 	protected void addAllQuestions(File jsonFile) throws FileNotFoundException, IOException, ParseException {
 		if(!fileTracker.contains(jsonFile.getAbsolutePath())) {
 			List<Question> questions = readJson(jsonFile);
@@ -82,14 +100,17 @@ public class QuestionBank {
 			}
 			fileTracker.add(jsonFile.getAbsolutePath());
 		}
-		if(debug) {
-			System.out.println("Debug Mode");
-			System.out.println("==========================");
-			System.out.println("current number count is: " + this.questions.size());
-			System.out.println("==========================");
-		}
 	}
 	
+	/**
+	 * function name: readJson
+	 * discription: helper function to read json file and genterate a list of questions extracted from json File.
+	 * @param jsonFile
+	 * @return List<Question>
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 * @throws ParseException
+	 */
 	private List<Question> readJson(File jsonFile) throws FileNotFoundException, IOException, ParseException {
 		// parse a json file and return it as a list of questions.
 		
@@ -101,7 +122,7 @@ public class QuestionBank {
         // typecasting obj to JSONObject 
         JSONObject jo = (JSONObject) obj; 
           
-        // getting name and lastName 
+        // getting qestion from json file.
         JSONArray questionArray = (JSONArray) jo.get("questionArray");
         for(int i = 0; i< questionArray.size();i++) {
         	JSONObject questionInfo = (JSONObject) questionArray.get(i);
