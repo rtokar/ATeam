@@ -197,7 +197,7 @@ public class QuestionScene extends Application {
 
 		//Else create new questionScene with next question
 		displayQuestionResult();
-
+		
 	}
 
 

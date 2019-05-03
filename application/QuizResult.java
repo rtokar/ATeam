@@ -41,7 +41,7 @@ public class QuizResult {
 	 */
 	public double getPercent() {
 		if (numAnswered==0) {return 0;}
-		return (double)numCorrect/numAnswered*100;
+		return Math.floor((double)numCorrect/numAnswered*100);
 	}
 	
 	/**
@@ -52,7 +52,7 @@ public class QuizResult {
 	public void start(Stage primaryStage) throws Exception {
 		try {
 			VBox root = new VBox(30);
-			double percent = getPercent(); // users score
+			int percent = (int)getPercent(); // users score
 			Label label1 = new Label("	You answered " + numCorrect + " question(s) correctly.");
 			Label label2 = new Label("	You answered " + numAnswered + " total question(s).");
 			Label label3 = new Label("	Your score: " + percent + "%");
