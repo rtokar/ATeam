@@ -38,12 +38,16 @@ public class MakeQuestionScene extends Application {
 	Button makeQuestion = new Button("Make Question"); // Make question then go back to main page
 
 	// List of answers for the question
-	private ArrayList<Answer> answerListObject = new ArrayList<Answer>(); // list of the Answer objects for question
+	private ArrayList<Answer> answerListObject = new ArrayList<Answer>(); 
 
 	// File for image needed publically
 	File image;
 
-	// Methods
+	/**
+	 * This method builds both the GUI and is responsible for calling the correct
+	 * events and methods when it is in needed.
+	 * @see javafx.application.Application#start(javafx.stage.Stage)
+	 */
 	@Override
 	public void start(Stage primaryStage) {
 		try {
@@ -60,7 +64,7 @@ public class MakeQuestionScene extends Application {
 			infoInvalidLabel.setFont(Font.font("Comic Sans MS", 15));
 			infoInvalidLabel.setTextFill(Color.RED);
 
-			// Required Labels
+			// Required Labels and Box for spicy spacing
 			Label requiredLabel = new Label("This required fields are:");
 			Label rl1 = new Label("-Question Topic");
 			Label rl2 = new Label("-Question Text");
@@ -111,6 +115,7 @@ public class MakeQuestionScene extends Application {
 			// HBox for both of the lists
 			HBox listBox = new HBox(25);
 
+			//Event that Adds answer object to both list and GUIs list
 			addAnswerButton.setOnAction(event -> {
 				if (answerListObject.size() < 6) {
 					if (!answerField.getText().equals("") && !answerField.getText().equals("Please fill this field")) {
@@ -177,6 +182,7 @@ public class MakeQuestionScene extends Application {
 			vBox2.getChildren().addAll(metaLabel, metaField, imageHBox, answerLabel, answerField, answerHBox, listBox,
 					exitingMakeQuestion);
 
+			//Style changes to vBoxs
 			vBox1.setPadding(new Insets(10, 0, 0, 25));
 			vBox2.setPadding(new Insets(10, 25, 0, 0));
 
@@ -231,7 +237,7 @@ public class MakeQuestionScene extends Application {
 	} // End of exitMakeQuestion method
 
 	/**
-	 * This launches the
+	 * This launches the stage and start method
 	 */
 	public static void main(String[] args) {
 		launch(args);
