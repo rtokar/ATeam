@@ -31,11 +31,9 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
-//other notes:
-
 /**
  * This is the main driver for the quiz generator.
- * @author jthalacker, ascherer
+ * @author ascherer, jthalacker
  *
  */
 public class Main extends Application{
@@ -463,70 +461,6 @@ public class Main extends Application{
       System.out.println(e.getMessage());
     }
 
-  }
-  
-  /**
-   * Saves the masterQuestionBank to the selected json file using strings instead of json objects
-   * @param jsonFile is the file in which we will save the contents of masterQuestionBank
-   */
-  private void save2(File jsonFile) {
-    String fileString = "";
-    fileString += "{\n\t\"questionArray\": \n\t[\n\t"; // this brings us to the "meta-data" part of the json file
-    int iter = 0;
-    for (Question q : masterQuestionBank.questions) {
-      // get correct image notation (null = none)
-      String imageText = "";
-      if (q.getImage() == null)
-        imageText += "none";
-      else
-        imageText += q.getImage();
-        
-      fileString += "    {\n\t        ";
-      fileString += "\"meta-data\":\""+ q.getMetadata() +"\",\n\t\t";
-      fileString += "\"questionText\": \""+ q.getQuestionText() +"\",\n\t        ";
-      fileString += "\"topic\": \""+ q.getQuestionTopic() +"\",\n\t        ";
-      fileString += "\"image\":\""+ imageText +"\",\n\t        ";
-      fileString += "\"choiceArray\":\n\t        ";
-      fileString += "[\n\t        ";
-      
-      int iter2 = 0;
-      for (Answer a : q.getAnswersList()) {
-        // set trueness string
-        String trueness = "";
-        if (a.getCorrectness())
-          trueness += "T";
-        else
-          trueness += "F";
-      //choice loop here
-        fileString += "\t{\"isCorrect\":\"" + trueness + "\",\"choice\":" + a.getAnswerText() + "\"}"; // TODO: last comma here wont be there for last choice, figure that out
-        // check for final answer, if so then dont add comma
-        if (iter2 < q.getAnswersList().size() - 1) {
-          fileString += ",";
-        }
-        iter2 ++;
-        fileString += "\n\t        ";
-      }
-      fileString += "]";
-      fileString += "\n\t    }";
-      // check for final question, dont add comma if at last questions
-      if (iter < masterQuestionBank.questions.size()-1)
-        fileString += ",";
-      iter ++;
-      fileString += "\n\t";
-    }
-
-    //close questionArray bracket
-    fileString += "]";
-    //close whole file curly bracket
-    fileString += "\n}\n";
-    //
-    try {
-      FileWriter file = new FileWriter(jsonFile);
-      file.write(fileString);
-      file.close();
-    } catch (Exception e) {
-      System.out.println(e.getMessage());
-    }   
   }
   
   /**
