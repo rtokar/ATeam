@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -235,8 +236,9 @@ public class Main extends Application{
 
     if (this.selectedTopic != null && !this.currentTopics.contains(this.selectedTopic)) { // add selectedTopic to currentTopics if it isnt null and not already there
       this.currentTopics.add(this.selectedTopic);
+      this.updateTopicList();
     }
-
+    Collections.sort(this.currentTopics);
     this.chosenTopicsListView.setItems(FXCollections.observableArrayList(this.currentTopics)); // update visible list with added topic
     this.topicQuestionBank = masterQuestionBank.filterQuestions(this.currentTopics); // create the topicQuestionBank as a filtered masterQuestionBank
 
